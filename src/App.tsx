@@ -8,12 +8,12 @@ const isValid =
   splitted.length === 3 && splitted[1].length > 0 && splitted[2].length > 0;
 function App() {
   return (
-    <div>
+    <>
       <GlobalStyle />
       {isValid && (
         <CommentList consumerID={splitted[1]} sequenceID={splitted[2]} />
       )}
-    </div>
+    </>
   );
 }
 

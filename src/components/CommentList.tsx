@@ -1,4 +1,4 @@
-import React, { Dispatch, FC, useEffect } from "react";
+import React, { Dispatch, FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { Comment } from "../entity/Comment";
@@ -13,8 +13,22 @@ import {
   CHANGE_SKIP_LIMIT,
 } from "../action/CommentAction";
 import { useReducerWithThunk } from "../hooks/useReducerWithThunk";
+import CommentArticle from "./CommentArticle";
+import CommentWriteForm from "./CommentWriteForm";
+import { useLocalStorage } from "../hooks/useLocalStorage";
+import { uuidv4 } from "../util/uuid";
 
 const CList = styled.div``;
+const Divider = styled.div`
+  border-top-color: rgb(235, 238, 240);
+  border-top-width: 1px;
+  border-top-style: solid;
+  height: 12px;
+  background-color: rgb(247, 249, 250);
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: rgb(235, 238, 240);
+`;
 
 interface CommentListProps {
   consumerID: string;
@@ -76,7 +90,6 @@ const reducer: Reducer<State, CommentActionTypes> = (state, action) => {
       });
     case FETCH_COMMENT_LIST_SUCCESS:
       if (state.cancelToken !== action.payload.token) {
-        console.log("취소취소!!!!!!!");
         return state; // 취소됨. 기존 상태 그대로 반환
       }
       return produce(state, (draft) => {
@@ -86,7 +99,6 @@ const reducer: Reducer<State, CommentActionTypes> = (state, action) => {
       });
     case FETCH_COMMENT_LIST_FAILURE:
       if (state.cancelToken !== action.payload.token) {
-        console.log("취소취소!!!!!!!2");
         return state; // 취소됨. 기존 상태 그대로 반환
       }
       return produce(state, (draft) => {
@@ -114,23 +126,26 @@ const initialState: State = {
 };
 
 const CommentList: FC<CommentListProps> = ({ consumerID, sequenceID }) => {
+  const [refetch, setRefetch] = useState(false);
+  const [uuid] = useLocalStorage("uuid", uuidv4());
   const [state, dispatch] = useReducerWithThunk(reducer, initialState);
-  const { skip, limit, apiStatus, comments, count } = state;
+  const { skip, limit, comments } = state;
   // get...
   useEffect(() => {
     const actionCreat = getCommentList({ consumerID, sequenceID, skip, limit });
     dispatch(actionCreat);
     // dispatch 미취급
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [consumerID, limit, sequenceID, skip]);
+  }, [consumerID, limit, sequenceID, skip, refetch]);
+
   return (
     <>
-      <div>
+      {/* <div>
         {apiStatus === "PENDING" && `불러오는 중...`}
         {apiStatus === "FULFILLED" &&
           `Service ID: ${consumerID} / ${sequenceID} (총: ${count}개의 댓글)`}
         {apiStatus === "REJECTED" && `무언가 잘못됨!`}
-      </div>
+      </div> 
       <button
         onClick={() => {
           dispatch({
@@ -140,19 +155,18 @@ const CommentList: FC<CommentListProps> = ({ consumerID, sequenceID }) => {
         }}
       >
         {state.skip + 2}페이지로
-      </button>
+      </button> */}
+      <CommentWriteForm
+        setRefetch={setRefetch}
+        uuid={uuid}
+        consumerID={consumerID}
+        sequenceID={sequenceID}
+      />
+      <Divider />
       <CList>
         {comments.map((comment) => {
-          return (
-            <div key={comment.id}>
-              {comment.date} / {comment.content.textData}
-              <img src={comment.content.imageData} alt={"댓글 이미지"} />
-            </div>
-          );
+          return <CommentArticle key={comment.id} comment={comment} />;
         })}
-        {/* <CommentArticle />
-        <CommentArticle />
-        <CommentArticle /> */}
       </CList>
     </>
   );
