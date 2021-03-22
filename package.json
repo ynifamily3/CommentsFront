@@ -27,7 +27,8 @@
     "start:real": "cross-env NODE_ENV=development REACT_APP_ENDPOINT=https://api.roco.moe react-scripts start",
     "build": "cross-env NODE_ENV=production REACT_APP_ENDPOINT=https://api.roco.moe react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "cross-env NODE_ENV=production REACT_APP_ENDPOINT=https://api.roco.moe GENERATE_SOURCEMAP=false react-scripts build && mv ./build/index.html build/200.html && surge ./build/ roco.moe"
   },
   "eslintConfig": {
     "extends": [
@@ -48,6 +49,7 @@
     ]
   },
   "devDependencies": {
-    "@types/axios": "^0.14.0"
+    "@types/axios": "^0.14.0",
+    "surge": "^0.22.1"
   }
 }
