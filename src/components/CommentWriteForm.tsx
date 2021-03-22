@@ -1,6 +1,6 @@
 import axios from "axios";
 import produce from "immer";
-import React, { Dispatch, FC, useEffect, useRef } from "react";
+import React, { Dispatch, FC, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import {
   CommentActionTypes,
@@ -9,7 +9,7 @@ import {
   WRITE_COMMENT_FAILURE,
   WRITE_COMMENT_SUCCESS,
 } from "../action/CommentAction";
-import { ApiResultWithCount } from "../entity/ApiResult";
+import { ApiResult, ApiResultWithCount } from "../entity/ApiResult";
 import { Comment } from "../entity/Comment";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useReducerWithThunk } from "../hooks/useReducerWithThunk";
@@ -53,6 +53,7 @@ const Row = styled.div`
 
 const ContentDraft = styled.div`
   overflow-wrap: break-word;
+  word-break: break-all;
   color: rgb(15, 20, 25);
   line-height: 20px;
   font-weight: 400;
@@ -68,6 +69,8 @@ const Input = styled.div`
   font-weight: inherit;
   color: #0f1419;
   outline: none;
+  overflow-wrap: break-word;
+  word-break: break-all;
   :empty::before {
     content: attr(placeholder);
     display: block; /* For Firefox */
@@ -84,6 +87,7 @@ const Bottom = styled.div`
 
 const Attachment = styled.div`
   display: flex;
+  align-items: center;
   flex: 1;
 `;
 
@@ -115,6 +119,12 @@ const UploadButton = styled.label`
   :hover {
     background-color: #ff5f5f;
   }
+`;
+
+const UploadStatus = styled.div`
+  margin-left: 1em;
+  overflow-wrap: break-word;
+  word-break: break-all;
 `;
 
 interface State {
@@ -222,6 +232,41 @@ const CommentWriteForm: FC<{
   const input = useRef<HTMLDivElement>(null);
   const nicknameInput = useRef<HTMLDivElement>(null);
   const [state, dispatch] = useReducerWithThunk(reducer, initialState);
+  // 파일 첨부는 action으로 관리하지 않을 것입니다.
+  const [attachedImage, setAttachedImage] = useState<File | null>(null);
+  const [fileUploadStatus, setFileUploadStatus] = useState<
+    "IDLE" | "PENDING" | "FULFILLED" | "REJECTED"
+  >("IDLE");
+  const [s3URL, setS3URL] = useState<string | null>(null);
+
+  // 파일 업로드
+  useEffect(() => {
+    if (!attachedImage) return;
+    async function up(imageFile: File) {
+      const formData = new FormData();
+      formData.append("file", imageFile);
+      const { data } = await axios.post<ApiResult<string>>("/file", formData);
+      if (data.status === "SUCCESS") {
+        // setS3URL(data.result);
+        return data.result;
+      } else {
+        throw new Error("Failure Uploading");
+      }
+    }
+    // 업로드 진행 처리
+    if (fileUploadStatus === "PENDING") {
+      // S3 Upload
+      up(attachedImage)
+        .then((data) => {
+          setFileUploadStatus("FULFILLED");
+          setS3URL(data);
+        })
+        .catch((e) => {
+          setFileUploadStatus("REJECTED");
+        });
+    }
+  }, [fileUploadStatus, attachedImage]);
+
   useEffect(() => {
     if (nicknameInput.current) nicknameInput.current.textContent = nickname;
   }, [nickname]);
@@ -237,7 +282,7 @@ const CommentWriteForm: FC<{
       const actionCreat = postComment({
         consumerID,
         content,
-        image: null,
+        image: s3URL,
         nickname,
         sequenceID,
         uuid,
@@ -279,14 +324,40 @@ const CommentWriteForm: FC<{
             <UploadButton className="input-file-button" htmlFor="input-file">
               사진 첨부
             </UploadButton>
+            <UploadStatus>
+              {fileUploadStatus === "PENDING" &&
+                `${attachedImage?.name} 업로드 중...`}
+              {fileUploadStatus === "FULFILLED" &&
+                `${attachedImage?.name} 업로드 완료!`}
+              {fileUploadStatus === "REJECTED" &&
+                `${attachedImage?.name} 업로드 실패`}
+            </UploadStatus>
             <input
               type="file"
               id="input-file"
               accept="image/*"
+              disabled={fileUploadStatus === "PENDING"}
               style={{ flex: 1, display: "none" }}
+              onChange={(e) => {
+                const files = e.target.files;
+                if (files && files.length > 0) {
+                  if (files[0].size < 1000000 * 25) {
+                    setFileUploadStatus("PENDING");
+                    setAttachedImage(files[0]);
+                    console.log(files[0]);
+                  } else {
+                    alert("파일 첨부 가능 용량: 25MB 이하입니다.");
+                  }
+                }
+              }}
             />
           </Attachment>
-          <Button onClick={handleRegister}>등록</Button>
+          <Button
+            onClick={handleRegister}
+            disabled={fileUploadStatus === "PENDING"}
+          >
+            등록
+          </Button>
         </Bottom>
       </RowC>
     </Form>

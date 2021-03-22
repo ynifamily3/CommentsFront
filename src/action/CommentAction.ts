@@ -8,6 +8,7 @@ export const CHANGE_SKIP_LIMIT = "CHANGE_SKIP_LIMIT";
 export const WRITE_COMMENT = "WRITE_COMMENT";
 export const WRITE_COMMENT_SUCCESS = "WRITE_COMMENT_SUCCESS";
 export const WRITE_COMMENT_FAILURE = "WRITE_COMMENT_FAILURE";
+
 export interface FetchCommentListAction {
   type: typeof FETCH_COMMENT_LIST;
   payload: {
