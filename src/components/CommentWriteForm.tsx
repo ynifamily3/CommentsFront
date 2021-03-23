@@ -290,6 +290,12 @@ const CommentWriteForm: FC<{
       setS3URL(null);
     }
   }, [state.apiStatus, setRefetch]);
+  // 에러 처리
+  useEffect(() => {
+    if (state.apiStatus === "REJECTED") {
+      alert("일시적인 오류로 댓글을 등록하지 못했습니다.");
+    }
+  }, [state.apiStatus]);
   return (
     <Form>
       <ProfilePhotoBox>

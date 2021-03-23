@@ -168,8 +168,14 @@ const CommentList: FC<CommentListProps> = ({ consumerID, sequenceID }) => {
         {apiStatus === "REJECTED" && (
           <Loading style={{ padding: "1em" }}>
             <CloseIcon />{" "}
-            <div style={{ marginTop: "1em", marginBottom: "1em" }}>
-              앗..! API서버에 문제가 있습니다!
+            <div
+              style={{
+                marginTop: "1em",
+                marginBottom: "1em",
+                color: "#5b7083",
+              }}
+            >
+              일시적인 오류로 댓글을 불러오지 못했습니다.
             </div>
             <Button
               onClick={(e) => {
