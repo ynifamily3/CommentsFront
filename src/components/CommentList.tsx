@@ -38,6 +38,7 @@ const Loading = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 1em;
 `;
 
 interface CommentListProps {
@@ -177,6 +178,13 @@ const CommentList: FC<CommentListProps> = ({ consumerID, sequenceID }) => {
             >
               재시도
             </Button>
+          </Loading>
+        )}
+        {apiStatus === "FULFILLED" && comments.length === 0 && (
+          <Loading>
+            <div style={{ color: "#5b7083" }}>
+              첫 번째 댓글의 주인공이 되세요!
+            </div>
           </Loading>
         )}
         {comments.map((comment) => {
