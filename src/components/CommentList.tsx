@@ -17,6 +17,9 @@ import CommentArticle from "./CommentArticle";
 import CommentWriteForm from "./CommentWriteForm";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { uuidv4 } from "../util/uuid";
+import "./atom/Spinner.scss";
+import { ReactComponent as CloseIcon } from "./atom/close.svg";
+import Button from "./atom/Button";
 
 const CList = styled.div``;
 const Divider = styled.div`
@@ -28,6 +31,13 @@ const Divider = styled.div`
   border-bottom-width: 1px;
   border-bottom-style: solid;
   border-bottom-color: rgb(235, 238, 240);
+`;
+
+const Loading = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 interface CommentListProps {
@@ -129,7 +139,7 @@ const CommentList: FC<CommentListProps> = ({ consumerID, sequenceID }) => {
   const [refetch, setRefetch] = useState(false);
   const [uuid] = useLocalStorage("uuid", uuidv4());
   const [state, dispatch] = useReducerWithThunk(reducer, initialState);
-  const { skip, limit, comments } = state;
+  const { skip, limit, comments, apiStatus } = state;
   // get...
   useEffect(() => {
     const actionCreat = getCommentList({ consumerID, sequenceID, skip, limit });
@@ -140,22 +150,6 @@ const CommentList: FC<CommentListProps> = ({ consumerID, sequenceID }) => {
 
   return (
     <>
-      {/* <div>
-        {apiStatus === "PENDING" && `불러오는 중...`}
-        {apiStatus === "FULFILLED" &&
-          `Service ID: ${consumerID} / ${sequenceID} (총: ${count}개의 댓글)`}
-        {apiStatus === "REJECTED" && `무언가 잘못됨!`}
-      </div> 
-      <button
-        onClick={() => {
-          dispatch({
-            type: CHANGE_SKIP_LIMIT,
-            payload: { limit: 50, skip: state.skip + 1 },
-          });
-        }}
-      >
-        {state.skip + 2}페이지로
-      </button> */}
       <CommentWriteForm
         setRefetch={setRefetch}
         uuid={uuid}
@@ -164,6 +158,27 @@ const CommentList: FC<CommentListProps> = ({ consumerID, sequenceID }) => {
       />
       <Divider />
       <CList>
+        {apiStatus === "PENDING" && (
+          <Loading>
+            <div className="loader" />
+            <div>로드 중...</div>
+          </Loading>
+        )}
+        {apiStatus === "REJECTED" && (
+          <Loading style={{ padding: "1em" }}>
+            <CloseIcon />{" "}
+            <div style={{ marginTop: "1em", marginBottom: "1em" }}>
+              앗..! API서버에 문제가 있습니다!
+            </div>
+            <Button
+              onClick={(e) => {
+                setRefetch((r) => !r);
+              }}
+            >
+              재시도
+            </Button>
+          </Loading>
+        )}
         {comments.map((comment) => {
           return <CommentArticle key={comment.id} comment={comment} />;
         })}

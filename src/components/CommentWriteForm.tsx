@@ -13,6 +13,7 @@ import { ApiResult, ApiResultWithCount } from "../entity/ApiResult";
 import { Comment } from "../entity/Comment";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useReducerWithThunk } from "../hooks/useReducerWithThunk";
+import Button from "./atom/Button";
 
 const Form = styled.div`
   display: flex;
@@ -91,21 +92,6 @@ const Attachment = styled.div`
   flex: 1;
 `;
 
-const Button = styled.button`
-  background-color: #4caf50; /* Green */
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  cursor: pointer;
-  :hover {
-    background-color: #3e8e41;
-  }
-`;
-
 const UploadButton = styled.label`
   background-color: #ff6600;
   border: none;
@@ -118,6 +104,9 @@ const UploadButton = styled.label`
   cursor: pointer;
   :hover {
     background-color: #ff5f5f;
+  }
+  :disabled {
+    opacity: 0.5;
   }
 `;
 
@@ -278,7 +267,6 @@ const CommentWriteForm: FC<{
     const content = input.current?.textContent;
     if (nickname && content) {
       setNickname(nickname);
-      if (input.current) input.current.textContent = "";
       const actionCreat = postComment({
         consumerID,
         content,
@@ -292,7 +280,14 @@ const CommentWriteForm: FC<{
   };
   useEffect(() => {
     if (state.apiStatus === "FULFILLED") {
+      // 리스트 갱신 시그널 보냄
       setRefetch((r) => !r);
+
+      // 입력폼 초기화
+      if (input.current) input.current.textContent = "";
+      setFileUploadStatus("IDLE");
+      setAttachedImage(null);
+      setS3URL(null);
     }
   }, [state.apiStatus, setRefetch]);
   return (
@@ -321,7 +316,15 @@ const CommentWriteForm: FC<{
         </RowC>
         <Bottom>
           <Attachment>
-            <UploadButton className="input-file-button" htmlFor="input-file">
+            <UploadButton
+              className="input-file-button"
+              htmlFor="input-file"
+              style={
+                fileUploadStatus === "PENDING" || state.apiStatus === "PENDING"
+                  ? { opacity: 0.5 }
+                  : { opacity: 1 }
+              }
+            >
               사진 첨부
             </UploadButton>
             <UploadStatus>
@@ -354,7 +357,9 @@ const CommentWriteForm: FC<{
           </Attachment>
           <Button
             onClick={handleRegister}
-            disabled={fileUploadStatus === "PENDING"}
+            disabled={
+              fileUploadStatus === "PENDING" || state.apiStatus === "PENDING"
+            }
           >
             등록
           </Button>
