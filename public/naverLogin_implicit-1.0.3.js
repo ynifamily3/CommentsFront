@@ -459,31 +459,31 @@ var naver_id_login = function (client_id, redirect_uri) {
 
   this.get_naver_userprofile = function (callback_func1) {
     // jQuery만 잡아먹고 필요없는 소스 삭제
-    $.ajax({
-      url:
-        "https://openapi.naver.com/v1/nid/getUserProfile.json?response_type=json",
-      type: "GET",
-      data: { access_token: this.oauthParams.access_token },
-      dataType: "jsonp",
-      jsonp: "oauth_callback",
-      success: function (result) {
-        inner_profileParams.age = result.response.age;
-        inner_profileParams.birthday = result.response.birthday;
-        inner_profileParams.email = result.response.email;
-        inner_profileParams.enc_id = result.response.enc_id;
-        inner_profileParams.gender = result.response.gender;
-        inner_profileParams.id = result.response.id;
-        inner_profileParams.nickname = result.response.nickname;
-        inner_profileParams.profile_image = result.response.profile_image;
-        inner_profileParams.name = result.response.name;
-        eval(callback_func1);
-      },
-      error: function (xhr, ajaxOptions, thrownError) {
-        //에러 처리는 적절히
-        alert(xhr.status);
-        alert(thrownError);
-      },
-    });
+    // $.ajax({
+    //   url:
+    //     "https://openapi.naver.com/v1/nid/getUserProfile.json?response_type=json",
+    //   type: "GET",
+    //   data: { access_token: this.oauthParams.access_token },
+    //   dataType: "jsonp",
+    //   jsonp: "oauth_callback",
+    //   success: function (result) {
+    //     inner_profileParams.age = result.response.age;
+    //     inner_profileParams.birthday = result.response.birthday;
+    //     inner_profileParams.email = result.response.email;
+    //     inner_profileParams.enc_id = result.response.enc_id;
+    //     inner_profileParams.gender = result.response.gender;
+    //     inner_profileParams.id = result.response.id;
+    //     inner_profileParams.nickname = result.response.nickname;
+    //     inner_profileParams.profile_image = result.response.profile_image;
+    //     inner_profileParams.name = result.response.name;
+    //     eval(callback_func1);
+    //   },
+    //   error: function (xhr, ajaxOptions, thrownError) {
+    //     //에러 처리는 적절히
+    //     alert(xhr.status);
+    //     alert(thrownError);
+    //   },
+    // });
   };
   /*
    * 아래 값을 name 으로 사용할 수 있음.
