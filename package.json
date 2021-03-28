@@ -13,6 +13,7 @@
     "@types/styled-components": "^5.1.9",
     "axios": "^0.21.1",
     "cross-env": "^7.0.3",
+    "dotenv": "^8.2.0",
     "immer": "^8.0.1",
     "normalize.css": "^8.0.1",
     "react": "^17.0.1",

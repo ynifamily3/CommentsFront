@@ -4,12 +4,14 @@ import React, { Dispatch, FC, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import {
   CommentActionTypes,
+  WriteCommentFailureAction,
   WriteCommentSuccessAction,
   WRITE_COMMENT,
   WRITE_COMMENT_FAILURE,
   WRITE_COMMENT_SUCCESS,
 } from "../action/CommentAction";
 import { ApiResult, ApiResultWithCount } from "../entity/ApiResult";
+import { AuthType, INaver } from "../entity/AuthType";
 import { Comment } from "../entity/Comment";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useReducerWithThunk } from "../hooks/useReducerWithThunk";
@@ -132,6 +134,9 @@ interface PostCommentApiPayload {
   image: string | null;
   content: string;
   uuid: string;
+  authValue: AuthType;
+  authMethod: string | null;
+  profilePhoto: string;
 }
 
 const postComment = ({
@@ -141,6 +146,9 @@ const postComment = ({
   nickname,
   image,
   content,
+  authValue,
+  authMethod,
+  profilePhoto,
 }: PostCommentApiPayload) => async (dispatch: Dispatch<CommentActionTypes>) => {
   const currentToken = Math.random();
   dispatch({
@@ -148,27 +156,41 @@ const postComment = ({
     payload: { token: currentToken },
   });
   try {
+    let headers: Record<string, string> = {};
+    if (authMethod === "naver") {
+      const naverAuthValue = authValue as INaver;
+      headers["Authorization"] = naverAuthValue.access_token;
+    }
     const { data } = await axios.post<ApiResultWithCount<Comment[]>>(
-      `/comment/${consumerID}/${sequenceID}?skip=${0}&limit=${1}`,
+      `/comment/${consumerID}/${sequenceID}?skip=${0}&limit=${1}&authType=${authMethod}`,
       {
         date: new Date().toISOString(),
         writer: {
           id: uuid,
           nickname,
-          profilePhoto: "https://via.placeholder.com/150",
+          profilePhoto,
         },
         content: {
           textData: content,
           imageData: image,
         },
-      }
+      },
+      { headers }
     );
     console.log(data);
     const action: WriteCommentSuccessAction = {
       type: WRITE_COMMENT_SUCCESS,
       payload: { token: currentToken },
     };
-    dispatch(action);
+    const failAction: WriteCommentFailureAction = {
+      type: WRITE_COMMENT_FAILURE,
+      payload: { token: currentToken, data: "댓글 등록 실패" },
+    };
+    if (data.status === "FAILURE") {
+      dispatch(failAction);
+    } else {
+      dispatch(action);
+    }
   } catch (e) {
     dispatch({
       type: WRITE_COMMENT_FAILURE,
@@ -207,7 +229,7 @@ const initialState: State = {
   apiStatus: "IDLE",
   cancelToken: 0,
   nickname: "",
-  image: "https://via.placeholder.com/150",
+  image: "",
   content: "",
 };
 
@@ -216,8 +238,14 @@ const CommentWriteForm: FC<{
   consumerID: string;
   sequenceID: string;
   setRefetch: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ uuid, consumerID, sequenceID, setRefetch }) => {
-  const [nickname, setNickname] = useLocalStorage("nickname", "");
+  authValue: AuthType;
+  authMethod: string | null;
+}> = ({ uuid, consumerID, sequenceID, setRefetch, authMethod, authValue }) => {
+  const [nickname, setNickname] = useLocalStorage("comments-api-nickname", "");
+  const [image] = useLocalStorage(
+    "comments-api-profile-photo",
+    "https://via.placeholder.com/150"
+  );
   const input = useRef<HTMLDivElement>(null);
   const nicknameInput = useRef<HTMLDivElement>(null);
   const [state, dispatch] = useReducerWithThunk(reducer, initialState);
@@ -236,7 +264,6 @@ const CommentWriteForm: FC<{
       formData.append("file", imageFile);
       const { data } = await axios.post<ApiResult<string>>("/file", formData);
       if (data.status === "SUCCESS") {
-        // setS3URL(data.result);
         return data.result;
       } else {
         throw new Error("Failure Uploading");
@@ -274,6 +301,9 @@ const CommentWriteForm: FC<{
         nickname,
         sequenceID,
         uuid,
+        authMethod,
+        authValue,
+        profilePhoto: image,
       });
       dispatch(actionCreat);
     }
@@ -299,7 +329,7 @@ const CommentWriteForm: FC<{
   return (
     <Form>
       <ProfilePhotoBox>
-        <ProfilePhoto src="https://via.placeholder.com/150"></ProfilePhoto>
+        <ProfilePhoto src={image}></ProfilePhoto>
       </ProfilePhotoBox>
       <RowC>
         <RowC>
