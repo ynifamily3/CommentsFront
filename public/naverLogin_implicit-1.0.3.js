@@ -254,7 +254,7 @@ var naver_id_login = function (client_id, redirect_uri) {
         naver_id_login_url +
         "' " +
         naver_id_popup_option +
-        " id='naver_id_login_anchor'><img src='http://static.nid.naver.com/oauth/button_" +
+        " id='naver_id_login_anchor'><img src='https://static.nid.naver.com/oauth/button_" +
         color +
         ".PNG' border='0' title='네이버 아이디로 로그인' width='" +
         this.button_height +
@@ -267,7 +267,7 @@ var naver_id_login = function (client_id, redirect_uri) {
         naver_id_login_url +
         "' " +
         naver_id_popup_option +
-        " id='naver_id_login_anchor'><img src='http://static.nid.naver.com/oauth/small_" +
+        " id='naver_id_login_anchor'><img src='https://static.nid.naver.com/oauth/small_" +
         color +
         "_in.PNG' border='0' title='네이버 아이디로 로그인' width='" +
         (this.button_height * 656) / 250 +
@@ -280,7 +280,7 @@ var naver_id_login = function (client_id, redirect_uri) {
         naver_id_login_url +
         "' " +
         naver_id_popup_option +
-        " id='naver_id_login_anchor'><img src='http://static.nid.naver.com/oauth/big_" +
+        " id='naver_id_login_anchor'><img src='https://static.nid.naver.com/oauth/big_" +
         color +
         ".PNG' border='0' title='네이버 아이디로 로그인' width='" +
         (this.button_height * 185) / 40 +
