@@ -31,8 +31,9 @@ const Nick = styled.div`
   size: 15px;
   line-height: 20px;
   color: #0f1419;
+  overflow-wrap: anywhere;
   word-break: break-all;
-  max-width: 400px;
+  max-width: 50px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -45,11 +46,13 @@ const NickSide = styled.div`
   size: 15px;
   line-height: 20px;
   min-width: 60px;
+  flex: 1;
 `;
 
 const RowC = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
 `;
 
 const Row = styled.div`
@@ -58,7 +61,7 @@ const Row = styled.div`
 `;
 
 const Content = styled.div`
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
   word-break: break-all;
   color: rgb(15, 20, 25);
   line-height: 20px;
@@ -73,15 +76,19 @@ const ImgContent = styled.div`
   border-color: rgb(196, 207, 214);
   overflow: hidden;
   margin-bottom: 12px;
+  width: 100%;
+  max-width: 300px;
   & > img {
     width: 100%;
     height: 100%;
     max-width: 780px;
   }
+  cursor: pointer;
 `;
 
 const ShowImgButton = styled(Button)`
-  width: 300px;
+  width: 100%;
+  max-width: 300px;
   background-color: inherit;
   color: rgb(15, 20, 25);
   border: 1px solid rgb(15, 20, 25);

@@ -19,7 +19,8 @@ const LoginList = styled.div`
 function App() {
   const [authMethod, setAuthMethod] = useState<null | string>(null);
   const [authValue, setAuthValue] = useState<AuthType>(null);
-
+  const [nickname, setNickname] = useState<string>(""); // 자기자신은 로컬스토리지와 동기가 안 되어서 본인용 state 주입
+  const [profile, setProfile] = useState<string>(""); // 자기자신은 로컬스토리지와 동기가 안 되어서 본인용 state 주입
   // localStorage 변경 (로그인 등..) 감시
   useEffect(() => {
     const handler = () => {
@@ -38,34 +39,38 @@ function App() {
               })
               .then(({ data }) => {
                 // 닉네임과 프로필사진 기본설정
-                localStorage.setItem(
-                  "comments-api-nickname",
-                  JSON.stringify(
-                    data.response.nickname ? data.response.nickname : ""
-                  )
+                const nick = JSON.stringify(
+                  data.response.nickname ? data.response.nickname : ""
                 );
-                localStorage.setItem(
-                  "comments-api-profile-photo",
-                  JSON.stringify(
-                    data.response.profile_image
-                      ? data.response.profile_image
-                      : ""
-                  )
+                const prof = JSON.stringify(
+                  data.response.profile_image ? data.response.profile_image : ""
                 );
+                localStorage.setItem("comments-api-nickname", nick);
+                localStorage.setItem("comments-api-profile-photo", prof);
                 setAuthMethod(authM);
                 setAuthValue(info);
+                setNickname(
+                  data.response.nickname ? data.response.nickname : ""
+                );
+                setProfile(
+                  data.response.profile_image ? data.response.profile_image : ""
+                );
               })
               .catch((error) => {
                 // 닉네임과 프로필사진 초기화
                 console.log(error);
                 localStorage.removeItem("comments-api-nickname");
                 localStorage.removeItem("comments-api-profile-photo");
+                setNickname("");
+                setProfile("");
                 setAuthMethod(null);
                 setAuthValue(null);
               });
           } catch (e) {
             localStorage.removeItem("comments-api-auth-type");
             localStorage.removeItem("comments-api-naver-auth");
+            setNickname("");
+            setProfile("");
             console.log("로컬스토리지 값 에러");
           }
           break;
@@ -93,6 +98,8 @@ function App() {
             sequenceID={splitted[2]}
             authMethod={authMethod}
             authValue={authValue}
+            nickname={nickname}
+            profile={profile}
           />
         </>
       )}

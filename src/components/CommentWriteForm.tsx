@@ -263,12 +263,28 @@ const CommentWriteForm: FC<{
   setRefetch: React.Dispatch<React.SetStateAction<boolean>>;
   authValue: AuthType;
   authMethod: string | null;
-}> = ({ uuid, consumerID, sequenceID, setRefetch, authMethod, authValue }) => {
+  nickname: string;
+  profile: string;
+}> = ({
+  uuid,
+  consumerID,
+  sequenceID,
+  setRefetch,
+  authMethod,
+  authValue,
+  nickname: fNick,
+  profile: fProf,
+}) => {
   const [nickname, setNickname] = useLocalStorage("comments-api-nickname", "");
-  const [image] = useLocalStorage(
+  const [image, setImage] = useLocalStorage(
     "comments-api-profile-photo",
     "https://via.placeholder.com/150"
   );
+  // 로그인 시 state설정
+  useEffect(() => {
+    setNickname(fNick);
+    setImage(fProf);
+  }, [fNick, fProf, setNickname, setImage]);
   const input = useRef<HTMLDivElement>(null);
   const nicknameInput = useRef<HTMLDivElement>(null);
   const [state, dispatch] = useReducerWithThunk(reducer, initialState);

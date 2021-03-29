@@ -47,6 +47,8 @@ interface CommentListProps {
   sequenceID: string;
   authValue: AuthType;
   authMethod: string | null;
+  nickname: string;
+  profile: string;
 }
 
 interface CommentListApiPayload {
@@ -144,6 +146,8 @@ const CommentList: FC<CommentListProps> = ({
   sequenceID,
   authMethod,
   authValue,
+  nickname,
+  profile,
 }) => {
   const [refetch, setRefetch] = useState(false);
   const [uuid] = useLocalStorage("uuid", uuidv4());
@@ -166,6 +170,8 @@ const CommentList: FC<CommentListProps> = ({
         sequenceID={sequenceID}
         authMethod={authMethod}
         authValue={authValue}
+        nickname={nickname}
+        profile={profile}
       />
       <Divider />
       <CList>
