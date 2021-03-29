@@ -18,6 +18,7 @@ import { useReducerWithThunk } from "../hooks/useReducerWithThunk";
 import Button from "./atom/Button";
 
 const Form = styled.div`
+  position: relative;
   display: flex;
   padding-left: 12px;
   padding-right: 12px;
@@ -74,6 +75,7 @@ const Input = styled.div`
   outline: none;
   overflow-wrap: break-word;
   word-break: break-all;
+  border-bottom: 1px solid #5b7083;
   :empty::before {
     content: attr(placeholder);
     display: block; /* For Firefox */
@@ -116,6 +118,27 @@ const UploadStatus = styled.div`
   margin-left: 1em;
   overflow-wrap: break-word;
   word-break: break-all;
+`;
+
+const RequireLogin = styled.div`
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1em;
+  background-color: rgba(0, 0, 0, 0.1);
+  position: absolute;
+  z-index: 1;
+  width: calc(100% - 12px);
+  height: calc(100% + 12px);
+  font-size: 1.2em;
+  top: -12px;
+  user-select: none;
+  opacity: 0;
+  :hover {
+    opacity: 1;
+  }
+  transition: opacity 0.2s ease-in-out;
 `;
 
 interface State {
@@ -303,7 +326,7 @@ const CommentWriteForm: FC<{
         uuid,
         authMethod,
         authValue,
-        profilePhoto: image,
+        profilePhoto: image ? image : "https://via.placeholder.com/150",
       });
       dispatch(actionCreat);
     }
@@ -327,81 +350,89 @@ const CommentWriteForm: FC<{
     }
   }, [state.apiStatus]);
   return (
-    <Form>
-      <ProfilePhotoBox>
-        <ProfilePhoto src={image}></ProfilePhoto>
-      </ProfilePhotoBox>
-      <RowC>
+    <>
+      <Form>
+        {!authMethod && (
+          <RequireLogin>로그인하시고 댓글을 등록해 주세요!</RequireLogin>
+        )}
+        <ProfilePhotoBox>
+          <ProfilePhoto src={image}></ProfilePhoto>
+        </ProfilePhotoBox>
         <RowC>
-          <Row>
-            <Nick>
+          <RowC>
+            <Row>
+              <Nick>
+                <Input
+                  contentEditable={!!authMethod}
+                  placeholder={"닉네임"}
+                  ref={nicknameInput}
+                />
+              </Nick>
+            </Row>
+            <ContentDraft onClick={handleFocus}>
               <Input
-                contentEditable={true}
-                placeholder={"닉네임"}
-                ref={nicknameInput}
+                contentEditable={!!authMethod && state.apiStatus !== "PENDING"}
+                placeholder={"댓글 작성"}
+                ref={input}
               />
-            </Nick>
-          </Row>
-          <ContentDraft onClick={handleFocus}>
-            <Input
-              contentEditable={state.apiStatus !== "PENDING"}
-              placeholder={"댓글 작성"}
-              ref={input}
-            />
-          </ContentDraft>
-        </RowC>
-        <Bottom>
-          <Attachment>
-            <UploadButton
-              className="input-file-button"
-              htmlFor="input-file"
-              style={
-                fileUploadStatus === "PENDING" || state.apiStatus === "PENDING"
-                  ? { opacity: 0.5 }
-                  : { opacity: 1 }
+            </ContentDraft>
+          </RowC>
+          <Bottom>
+            <Attachment>
+              <UploadButton
+                className="input-file-button"
+                htmlFor="input-file"
+                style={
+                  fileUploadStatus === "PENDING" ||
+                  state.apiStatus === "PENDING"
+                    ? { opacity: 0.5 }
+                    : { opacity: 1 }
+                }
+              >
+                사진 첨부
+              </UploadButton>
+              <UploadStatus>
+                {fileUploadStatus === "PENDING" &&
+                  `${attachedImage?.name} 업로드 중...`}
+                {fileUploadStatus === "FULFILLED" &&
+                  `${attachedImage?.name} 업로드 완료!`}
+                {fileUploadStatus === "REJECTED" &&
+                  `${attachedImage?.name} 업로드 실패`}
+              </UploadStatus>
+              <input
+                type="file"
+                id="input-file"
+                accept="image/*"
+                disabled={!authMethod || fileUploadStatus === "PENDING"}
+                style={{ flex: 1, display: "none" }}
+                onChange={(e) => {
+                  const files = e.target.files;
+                  if (files && files.length > 0) {
+                    if (files[0].size < 1000000 * 25) {
+                      setFileUploadStatus("PENDING");
+                      setAttachedImage(files[0]);
+                      console.log(files[0]);
+                    } else {
+                      alert("파일 첨부 가능 용량: 25MB 이하입니다.");
+                    }
+                  }
+                }}
+              />
+            </Attachment>
+            <Button
+              onClick={handleRegister}
+              disabled={
+                !authMethod ||
+                fileUploadStatus === "PENDING" ||
+                state.apiStatus === "PENDING"
               }
             >
-              사진 첨부
-            </UploadButton>
-            <UploadStatus>
-              {fileUploadStatus === "PENDING" &&
-                `${attachedImage?.name} 업로드 중...`}
-              {fileUploadStatus === "FULFILLED" &&
-                `${attachedImage?.name} 업로드 완료!`}
-              {fileUploadStatus === "REJECTED" &&
-                `${attachedImage?.name} 업로드 실패`}
-            </UploadStatus>
-            <input
-              type="file"
-              id="input-file"
-              accept="image/*"
-              disabled={fileUploadStatus === "PENDING"}
-              style={{ flex: 1, display: "none" }}
-              onChange={(e) => {
-                const files = e.target.files;
-                if (files && files.length > 0) {
-                  if (files[0].size < 1000000 * 25) {
-                    setFileUploadStatus("PENDING");
-                    setAttachedImage(files[0]);
-                    console.log(files[0]);
-                  } else {
-                    alert("파일 첨부 가능 용량: 25MB 이하입니다.");
-                  }
-                }
-              }}
-            />
-          </Attachment>
-          <Button
-            onClick={handleRegister}
-            disabled={
-              fileUploadStatus === "PENDING" || state.apiStatus === "PENDING"
-            }
-          >
-            등록
-          </Button>
-        </Bottom>
-      </RowC>
-    </Form>
+              등록
+            </Button>
+          </Bottom>
+        </RowC>
+      </Form>
+    </>
   );
 };
 

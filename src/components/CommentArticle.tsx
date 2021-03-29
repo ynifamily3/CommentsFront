@@ -1,6 +1,7 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import styled from "styled-components";
 import { Comment } from "../entity/Comment";
+import Button from "./atom/Button";
 
 interface CommentArticleProps {
   comment: Comment;
@@ -30,6 +31,11 @@ const Nick = styled.div`
   size: 15px;
   line-height: 20px;
   color: #0f1419;
+  word-break: break-all;
+  max-width: 400px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 const NickSide = styled.div`
@@ -38,6 +44,7 @@ const NickSide = styled.div`
   margin-left: 4px;
   size: 15px;
   line-height: 20px;
+  min-width: 60px;
 `;
 
 const RowC = styled.div`
@@ -52,6 +59,7 @@ const Row = styled.div`
 
 const Content = styled.div`
   overflow-wrap: break-word;
+  word-break: break-all;
   color: rgb(15, 20, 25);
   line-height: 20px;
   font-weight: 400;
@@ -72,8 +80,46 @@ const ImgContent = styled.div`
   }
 `;
 
+const ShowImgButton = styled(Button)`
+  width: 300px;
+  background-color: inherit;
+  color: rgb(15, 20, 25);
+  border: 1px solid rgb(15, 20, 25);
+  border-radius: 8px;
+  :hover {
+    background-color: rgb(15, 20, 25, 0.1);
+  }
+  margin-bottom: 1em;
+`;
+
 const CommentArticle: FC<CommentArticleProps> = (props) => {
   const { comment } = props;
+  const [showImg, setShowImg] = useState(false);
+  const currentDate = new Date();
+  const registeredDate = new Date(comment.date);
+  const yyyy = "" + registeredDate.getFullYear();
+  const mm = ("" + (registeredDate.getMonth() + 1)).padStart(2, "0");
+  const dd = ("" + registeredDate.getDate()).padStart(2, "0");
+  const hour = registeredDate.getHours();
+  const isMorning = hour < 12;
+  const diffSeconds = Math.floor((+currentDate - +registeredDate) / 1000);
+  let diffString = `${diffSeconds}초 전`;
+  if (diffSeconds > 604800) {
+    diffString = `${yyyy}/${mm}/${dd} ${isMorning ? "오전" : "오후"} ${
+      !isMorning && hour === 12 ? hour : hour % 12
+    }시`;
+  } else if (diffSeconds > 86400) {
+    diffString = `${Math.floor(diffSeconds / 86400)}일 전`;
+  } else if (diffSeconds > 3600) {
+    diffString = `${Math.floor(diffSeconds / 3600)}시간 전`;
+  } else if (diffSeconds > 60) {
+    diffString = `${Math.floor(diffSeconds / 60)}분 전`;
+  } else {
+    diffString = `방금 전`;
+  }
+  const handleShowImg = () => {
+    setShowImg(true);
+  };
   return (
     <Article>
       <ProfilePhotoBox>
@@ -82,13 +128,20 @@ const CommentArticle: FC<CommentArticleProps> = (props) => {
       <RowC>
         <Row>
           <Nick>{comment.writer.nickname}</Nick>
-          <NickSide>3분 전</NickSide>
+          <NickSide>{diffString}</NickSide>
         </Row>
         <Content>{comment.content.textData}</Content>
         {comment.content.imageData && (
-          <ImgContent>
-            <img src={comment.content.imageData} alt="이미지" />
-          </ImgContent>
+          <>
+            {!showImg && (
+              <ShowImgButton onClick={handleShowImg}>이미지 보기</ShowImgButton>
+            )}
+            {showImg && (
+              <ImgContent>
+                <img src={comment.content.imageData} alt="이미지" />
+              </ImgContent>
+            )}
+          </>
         )}
       </RowC>
     </Article>

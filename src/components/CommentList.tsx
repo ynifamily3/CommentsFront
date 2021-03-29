@@ -42,12 +42,6 @@ const Loading = styled.div`
   padding: 1em;
 `;
 
-const RequireLogin = styled.div`
-  display: flex;
-  justify-content: center;
-  padding: 1em;
-`;
-
 interface CommentListProps {
   consumerID: string;
   sequenceID: string;
@@ -165,18 +159,14 @@ const CommentList: FC<CommentListProps> = ({
 
   return (
     <>
-      {authMethod ? (
-        <CommentWriteForm
-          setRefetch={setRefetch}
-          uuid={uuid}
-          consumerID={consumerID}
-          sequenceID={sequenceID}
-          authMethod={authMethod}
-          authValue={authValue}
-        />
-      ) : (
-        <RequireLogin>로그인하시고 댓글을 등록해 주세요!</RequireLogin>
-      )}
+      <CommentWriteForm
+        setRefetch={setRefetch}
+        uuid={uuid}
+        consumerID={consumerID}
+        sequenceID={sequenceID}
+        authMethod={authMethod}
+        authValue={authValue}
+      />
       <Divider />
       <CList>
         {apiStatus === "PENDING" && (
