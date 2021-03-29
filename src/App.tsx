@@ -6,10 +6,16 @@ import NaverLogin from "./components/NaverLogin";
 import { AuthType, INaver } from "./entity/AuthType";
 import axios from "axios";
 import { INaverProfileResult } from "./entity/NaverProfile";
+import styled from "styled-components";
 
 const splitted = window.location.pathname.split("/");
 const isValid =
   splitted.length === 3 && splitted[1].length > 0 && splitted[2].length > 0;
+const LoginList = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  padding: 1em;
+`;
 function App() {
   const [authMethod, setAuthMethod] = useState<null | string>(null);
   const [authValue, setAuthValue] = useState<AuthType>(null);
@@ -79,7 +85,9 @@ function App() {
       <GlobalStyle />
       {isValid && (
         <>
-          <NaverLogin />
+          <LoginList>
+            <NaverLogin />
+          </LoginList>
           <CommentList
             consumerID={splitted[1]}
             sequenceID={splitted[2]}
