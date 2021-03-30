@@ -4,10 +4,20 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="./loading.css" />
+
     <title>로그인</title>
   </head>
   <body>
-    잠시만 기다려 주세요...
+    <div class="main-site">
+      <div class="main-header pad-top wrapper" id="mainHeader">
+        <h1 class="text-giga">로그인 중입니다. 잠시만 기다려 주세요.</h1>
+      </div>
+
+      <div class="main-content space-top wrapper" role="main" id="mainContent">
+        <div class="loader loader-black loader-1"></div>
+      </div>
+    </div>
     <script type="text/javascript">
       const raw = location.hash.substr(1).split("&");
       let obj = {};
@@ -20,7 +30,14 @@
       });
       const message = { authMethod: "naver", authValue: obj };
       window.opener.postMessage(message, window.origin);
-      self.close();
+
+      window.addEventListener(
+        "message",
+        () => {
+          self.close();
+        },
+        false
+      );
     </script>
   </body>
 </html>
