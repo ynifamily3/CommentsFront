@@ -56,6 +56,14 @@ function App() {
                 if (data.response.profile_image) {
                   setProfile(data.response.profile_image);
                 }
+              })
+              .catch((error) => {
+                console.log("Err: ", error);
+                alert(
+                  "프로필정보를 얻어올 수 없었습니다. (직접 닉네임을 설정해 주세요)"
+                );
+              })
+              .finally(() => {
                 // 팝업 창 닫히도록 설정
                 (event.source as Window).close();
               });
