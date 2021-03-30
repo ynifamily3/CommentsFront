@@ -45,8 +45,6 @@ function App() {
                 headers: { Authorization: authValue.access_token },
               })
               .then(({ data }) => {
-                // Auth 값 설정
-                setAuth(event.data);
                 if (data.response.id) {
                   setUserId(data.response.id);
                 }
@@ -65,6 +63,8 @@ function App() {
               })
               .finally(() => {
                 // 팝업 창 닫히도록 설정
+                // Auth 값 설정
+                setAuth(event.data);
                 (event.source as Window).close();
               });
             break;
