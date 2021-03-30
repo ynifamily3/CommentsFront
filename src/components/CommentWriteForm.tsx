@@ -11,9 +11,7 @@ import {
   WRITE_COMMENT_SUCCESS,
 } from "../action/CommentAction";
 import { ApiResult, ApiResultWithCount } from "../entity/ApiResult";
-import { AuthState, INaver } from "../entity/AuthType";
 import { Comment } from "../entity/Comment";
-import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useReducerWithThunk } from "../hooks/useReducerWithThunk";
 import Button from "./atom/Button";
 import { CommentListProps } from "./CommentList";
@@ -267,8 +265,7 @@ const CommentWriteForm: FC<CommentWriteFormProps> = ({
   nickname: fNick,
   profile: fProf,
 }) => {
-  console.log(fNick);
-  const [nickname, setNickname] = useState(fNick);
+  const [, setNickname] = useState(fNick);
   const [image, setImage] = useState(fProf);
 
   const input = useRef<HTMLDivElement>(null);

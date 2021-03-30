@@ -11,7 +11,7 @@
   <body>
     <div class="main-site">
       <div class="main-header pad-top wrapper" id="mainHeader">
-        <h1 class="text-giga">로그인 중입니다. 잠시만 기다려 주세요.</h1>
+        로그인 중입니다. 잠시만 기다려 주세요.
       </div>
 
       <div class="main-content space-top wrapper" role="main" id="mainContent">
@@ -30,14 +30,6 @@
       });
       const message = { authMethod: "naver", authValue: obj };
       window.opener.postMessage(message, window.origin);
-
-      window.addEventListener(
-        "message",
-        () => {
-          self.close();
-        },
-        false
-      );
     </script>
   </body>
 </html>

@@ -56,11 +56,9 @@ function App() {
                 if (data.response.profile_image) {
                   setProfile(data.response.profile_image);
                 }
+                // 팝업 창 닫히도록 설정
+                (event.source as Window).close();
               });
-            // 팝업 창 닫히도록 설정
-            if (event.source instanceof Window) {
-              event.source.postMessage("close", window.origin);
-            }
             break;
           default:
             break;
