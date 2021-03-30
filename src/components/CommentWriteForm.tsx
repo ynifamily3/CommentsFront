@@ -74,7 +74,6 @@ const Input = styled.div`
   outline: none;
   overflow-wrap: break-word;
   word-break: break-all;
-  border-bottom: 1px solid #5b7083;
   :empty::before {
     content: attr(placeholder);
     display: block; /* For Firefox */
