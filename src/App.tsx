@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "normalize.css";
 import GlobalStyle from "./GlobalStyles";
 import CommentList from "./components/CommentList";
@@ -8,6 +8,7 @@ import axios from "axios";
 import { INaverProfileResult } from "./entity/NaverProfile";
 import styled from "styled-components";
 import TwitterLogin from "./components/TwitterLogin";
+import useSendHeight from "./hooks/useSendHeight";
 
 const splitted = window.location.pathname.split("/");
 const isValid =
@@ -80,16 +81,7 @@ function App() {
     };
   }, []);
   // 초기 렌더링 시 높이 지정
-  useLayoutEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const paramsGet = urlParams.get("origin");
-    if (!paramsGet) return;
-    const origin = window.decodeURIComponent(paramsGet);
-    window.parent.postMessage(
-      { height: window.document.body.scrollHeight },
-      origin
-    );
-  }, [userId, auth, nickname, profile]);
+  useSendHeight([userId, auth, nickname, profile]);
   return (
     <>
       <GlobalStyle />

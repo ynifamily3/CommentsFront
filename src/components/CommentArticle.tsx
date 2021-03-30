@@ -1,6 +1,7 @@
-import React, { FC, useLayoutEffect, useState } from "react";
+import React, { FC, useState } from "react";
 import styled from "styled-components";
 import { Comment } from "../entity/Comment";
+import useSendHeight from "../hooks/useSendHeight";
 import Button from "./atom/Button";
 
 interface CommentArticleProps {
@@ -99,6 +100,17 @@ const ShowImgButton = styled(Button)`
   margin-bottom: 1em;
 `;
 
+const handleImageLoaded = () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const paramsGet = urlParams.get("origin");
+  if (!paramsGet) return;
+  const origin = window.decodeURIComponent(paramsGet);
+  window.parent.postMessage(
+    { height: window.document.body.scrollHeight },
+    origin
+  );
+};
+
 const CommentArticle: FC<CommentArticleProps> = (props) => {
   const { comment } = props;
   const [showImg, setShowImg] = useState(false);
@@ -127,16 +139,7 @@ const CommentArticle: FC<CommentArticleProps> = (props) => {
   const handleShowImg = () => {
     setShowImg(true);
   };
-  useLayoutEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const paramsGet = urlParams.get("origin");
-    if (!paramsGet) return;
-    const origin = window.decodeURIComponent(paramsGet);
-    window.parent.postMessage(
-      { height: window.document.body.scrollHeight },
-      origin
-    );
-  }, [showImg]);
+
   return (
     <Article>
       <ProfilePhotoBox>
@@ -155,7 +158,11 @@ const CommentArticle: FC<CommentArticleProps> = (props) => {
             )}
             {showImg && (
               <ImgContent>
-                <img src={comment.content.imageData} alt="이미지" />
+                <img
+                  src={comment.content.imageData}
+                  alt="이미지"
+                  onLoad={handleImageLoaded}
+                />
               </ImgContent>
             )}
           </>

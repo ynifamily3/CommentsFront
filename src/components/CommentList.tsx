@@ -1,10 +1,4 @@
-import React, {
-  Dispatch,
-  FC,
-  useEffect,
-  useLayoutEffect,
-  useState,
-} from "react";
+import React, { Dispatch, FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { Comment } from "../entity/Comment";
@@ -25,6 +19,7 @@ import "./atom/Spinner.scss";
 import { ReactComponent as CloseIcon } from "./atom/close.svg";
 import Button from "./atom/Button";
 import { AuthState } from "../entity/AuthType";
+import useSendHeight from "../hooks/useSendHeight";
 
 const CList = styled.div``;
 const Divider = styled.div`
@@ -158,16 +153,7 @@ const CommentList: FC<CommentListProps> = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [consumerID, limit, sequenceID, skip, refetch]);
 
-  useLayoutEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const paramsGet = urlParams.get("origin");
-    if (!paramsGet) return;
-    const origin = window.decodeURIComponent(paramsGet);
-    window.parent.postMessage(
-      { height: window.document.body.scrollHeight },
-      origin
-    );
-  }, [state]);
+  useSendHeight([state]);
 
   return (
     <>
