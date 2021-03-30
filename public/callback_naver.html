@@ -18,14 +18,8 @@
           obj["expires_in"] = new Date().getTime() + +splitted[1];
         }
       });
-      window.localStorage.setItem(
-        "comments-api-auth-type",
-        JSON.stringify("naver")
-      );
-      window.localStorage.setItem(
-        "comments-api-naver-auth",
-        JSON.stringify(obj)
-      );
+      const message = { authMethod: "naver", authValue: obj };
+      window.opener.postMessage(message, window.origin);
       self.close();
     </script>
   </body>

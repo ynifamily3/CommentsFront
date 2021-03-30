@@ -15,12 +15,10 @@ import {
 import { useReducerWithThunk } from "../hooks/useReducerWithThunk";
 import CommentArticle from "./CommentArticle";
 import CommentWriteForm from "./CommentWriteForm";
-import { useLocalStorage } from "../hooks/useLocalStorage";
-import { uuidv4 } from "../util/uuid";
 import "./atom/Spinner.scss";
 import { ReactComponent as CloseIcon } from "./atom/close.svg";
 import Button from "./atom/Button";
-import { AuthType } from "../entity/AuthType";
+import { AuthState } from "../entity/AuthType";
 
 const CList = styled.div``;
 const Divider = styled.div`
@@ -42,11 +40,11 @@ const Loading = styled.div`
   padding: 1em;
 `;
 
-interface CommentListProps {
+export interface CommentListProps {
   consumerID: string;
   sequenceID: string;
-  authValue: AuthType;
-  authMethod: string | null;
+  userId: string;
+  auth: AuthState;
   nickname: string;
   profile: string;
 }
@@ -141,16 +139,9 @@ const initialState: State = {
   cancelToken: 0,
 };
 
-const CommentList: FC<CommentListProps> = ({
-  consumerID,
-  sequenceID,
-  authMethod,
-  authValue,
-  nickname,
-  profile,
-}) => {
+const CommentList: FC<CommentListProps> = (props) => {
+  const { consumerID, sequenceID, auth, nickname, profile, userId } = props;
   const [refetch, setRefetch] = useState(false);
-  const [uuid] = useLocalStorage("uuid", uuidv4());
   const [state, dispatch] = useReducerWithThunk(reducer, initialState);
   const { skip, limit, comments, apiStatus } = state;
   // get...
@@ -165,11 +156,10 @@ const CommentList: FC<CommentListProps> = ({
     <>
       <CommentWriteForm
         setRefetch={setRefetch}
-        uuid={uuid}
         consumerID={consumerID}
         sequenceID={sequenceID}
-        authMethod={authMethod}
-        authValue={authValue}
+        userId={userId}
+        auth={auth}
         nickname={nickname}
         profile={profile}
       />

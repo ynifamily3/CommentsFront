@@ -3,7 +3,7 @@ import "normalize.css";
 import GlobalStyle from "./GlobalStyles";
 import CommentList from "./components/CommentList";
 import NaverLogin from "./components/NaverLogin";
-import { AuthType, INaver } from "./entity/AuthType";
+import { AuthState } from "./entity/AuthType";
 import axios from "axios";
 import { INaverProfileResult } from "./entity/NaverProfile";
 import styled from "styled-components";
@@ -16,73 +16,56 @@ const LoginList = styled.div`
   justify-content: flex-end;
   padding: 1em;
 `;
+
 function App() {
-  const [authMethod, setAuthMethod] = useState<null | string>(null);
-  const [authValue, setAuthValue] = useState<AuthType>(null);
-  const [nickname, setNickname] = useState<string>(""); // 자기자신은 로컬스토리지와 동기가 안 되어서 본인용 state 주입
-  const [profile, setProfile] = useState<string>(""); // 자기자신은 로컬스토리지와 동기가 안 되어서 본인용 state 주입
-  // localStorage 변경 (로그인 등..) 감시
+  const [auth, setAuth] = useState<AuthState>({
+    authMethod: null,
+    authValue: null,
+  });
+  const [userId, setUserId] = useState<string>(""); // 고유 유저 ID (서비스 제공자마다 다름)
+  const [nickname, setNickname] = useState<string>("");
+  const [profile, setProfile] = useState<string>(
+    "https://via.placeholder.com/150"
+  );
+  // receive message
   useEffect(() => {
-    const handler = () => {
-      const authM = JSON.parse(
-        localStorage.getItem("comments-api-auth-type") as string
-      );
-      switch (authM) {
-        case "naver":
-          try {
-            const info = JSON.parse(
-              localStorage.getItem("comments-api-naver-auth") as string
-            ) as INaver;
+    function receiveMessage(event: MessageEvent<AuthState>) {
+      if (event.origin !== window.origin) {
+        console.warn(event.origin, "!==", window.origin);
+        console.log(event.data);
+        return;
+      }
+      // 닉네임, 프로필사진 설정
+      if (event.data.authMethod) {
+        const { authMethod, authValue } = event.data;
+        switch (authMethod) {
+          case "naver":
             axios
               .get<INaverProfileResult>("/auth/naver/profile", {
-                headers: { Authorization: info.access_token },
+                headers: { Authorization: authValue.access_token },
               })
               .then(({ data }) => {
-                // 닉네임과 프로필사진 기본설정
-                const nick = JSON.stringify(
-                  data.response.nickname ? data.response.nickname : ""
-                );
-                const prof = JSON.stringify(
-                  data.response.profile_image ? data.response.profile_image : ""
-                );
-                localStorage.setItem("comments-api-nickname", nick);
-                localStorage.setItem("comments-api-profile-photo", prof);
-                setAuthMethod(authM);
-                setAuthValue(info);
-                setNickname(
-                  data.response.nickname ? data.response.nickname : ""
-                );
-                setProfile(
-                  data.response.profile_image ? data.response.profile_image : ""
-                );
-              })
-              .catch((error) => {
-                // 닉네임과 프로필사진 초기화
-                console.log(error);
-                localStorage.removeItem("comments-api-nickname");
-                localStorage.removeItem("comments-api-profile-photo");
-                setNickname("");
-                setProfile("");
-                setAuthMethod(null);
-                setAuthValue(null);
+                // Auth 값 설정
+                setAuth(event.data);
+                if (data.response.id) {
+                  setUserId(data.response.id);
+                }
+                if (data.response.nickname) {
+                  setNickname(data.response.nickname);
+                }
+                if (data.response.profile_image) {
+                  setProfile(data.response.profile_image);
+                }
               });
-          } catch (e) {
-            localStorage.removeItem("comments-api-auth-type");
-            localStorage.removeItem("comments-api-naver-auth");
-            setNickname("");
-            setProfile("");
-            console.log("로컬스토리지 값 에러");
-          }
-          break;
-        default:
-          break;
+            break;
+          default:
+            break;
+        }
       }
-      // 새로운 닉네임과 프로필사진 받아오기
-    };
-    window.addEventListener("storage", handler);
-    handler(); // 처음 한 번은 실행
+    }
+    window.addEventListener("message", receiveMessage, false);
     return () => {
-      window.removeEventListener("storage", handler);
+      window.removeEventListener("message", receiveMessage);
     };
   }, []);
   return (
@@ -96,8 +79,8 @@ function App() {
           <CommentList
             consumerID={splitted[1]}
             sequenceID={splitted[2]}
-            authMethod={authMethod}
-            authValue={authValue}
+            userId={userId}
+            auth={auth}
             nickname={nickname}
             profile={profile}
           />

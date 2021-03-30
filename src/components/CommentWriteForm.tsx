@@ -11,11 +11,12 @@ import {
   WRITE_COMMENT_SUCCESS,
 } from "../action/CommentAction";
 import { ApiResult, ApiResultWithCount } from "../entity/ApiResult";
-import { AuthType, INaver } from "../entity/AuthType";
+import { AuthState, INaver } from "../entity/AuthType";
 import { Comment } from "../entity/Comment";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useReducerWithThunk } from "../hooks/useReducerWithThunk";
 import Button from "./atom/Button";
+import { CommentListProps } from "./CommentList";
 
 const Form = styled.div`
   position: relative;
@@ -150,29 +151,24 @@ interface State {
 }
 type Reducer<T, P> = (state: T, action: P) => T;
 
-interface PostCommentApiPayload {
-  consumerID: string;
-  sequenceID: string;
-  nickname: string;
+type PostCommentApiPayload = CommentListProps & {
   image: string | null;
   content: string;
-  uuid: string;
-  authValue: AuthType;
-  authMethod: string | null;
-  profilePhoto: string;
-}
+};
 
-const postComment = ({
-  uuid,
-  consumerID,
-  sequenceID,
-  nickname,
-  image,
-  content,
-  authValue,
-  authMethod,
-  profilePhoto,
-}: PostCommentApiPayload) => async (dispatch: Dispatch<CommentActionTypes>) => {
+const postComment = (payload: PostCommentApiPayload) => async (
+  dispatch: Dispatch<CommentActionTypes>
+) => {
+  const {
+    consumerID,
+    sequenceID,
+    nickname,
+    image,
+    content,
+    auth,
+    userId,
+    profile,
+  } = payload;
   const currentToken = Math.random();
   dispatch({
     type: WRITE_COMMENT,
@@ -180,18 +176,20 @@ const postComment = ({
   });
   try {
     let headers: Record<string, string> = {};
-    if (authMethod === "naver") {
-      const naverAuthValue = authValue as INaver;
+    if (auth.authMethod === "naver") {
+      const naverAuthValue = auth.authValue;
       headers["Authorization"] = naverAuthValue.access_token;
     }
     const { data } = await axios.post<ApiResultWithCount<Comment[]>>(
-      `/comment/${consumerID}/${sequenceID}?skip=${0}&limit=${1}&authType=${authMethod}`,
+      `/comment/${consumerID}/${sequenceID}?skip=${0}&limit=${1}&authType=${
+        auth.authMethod
+      }`,
       {
         date: new Date().toISOString(),
         writer: {
-          id: uuid,
+          id: `${auth.authMethod}-${userId}`,
           nickname,
-          profilePhoto,
+          profilePhoto: profile,
         },
         content: {
           textData: content,
@@ -256,35 +254,23 @@ const initialState: State = {
   content: "",
 };
 
-const CommentWriteForm: FC<{
-  uuid: string;
-  consumerID: string;
-  sequenceID: string;
+type CommentWriteFormProps = CommentListProps & {
   setRefetch: React.Dispatch<React.SetStateAction<boolean>>;
-  authValue: AuthType;
-  authMethod: string | null;
-  nickname: string;
-  profile: string;
-}> = ({
-  uuid,
+};
+
+const CommentWriteForm: FC<CommentWriteFormProps> = ({
   consumerID,
   sequenceID,
   setRefetch,
-  authMethod,
-  authValue,
+  auth,
+  userId,
   nickname: fNick,
   profile: fProf,
 }) => {
-  const [nickname, setNickname] = useLocalStorage("comments-api-nickname", "");
-  const [image, setImage] = useLocalStorage(
-    "comments-api-profile-photo",
-    "https://via.placeholder.com/150"
-  );
-  // 로그인 시 state설정
-  useEffect(() => {
-    setNickname(fNick);
-    setImage(fProf);
-  }, [fNick, fProf, setNickname, setImage]);
+  console.log(fNick);
+  const [nickname, setNickname] = useState(fNick);
+  const [image, setImage] = useState(fProf);
+
   const input = useRef<HTMLDivElement>(null);
   const nicknameInput = useRef<HTMLDivElement>(null);
   const [state, dispatch] = useReducerWithThunk(reducer, initialState);
@@ -322,9 +308,16 @@ const CommentWriteForm: FC<{
     }
   }, [fileUploadStatus, attachedImage]);
 
+  // 닉네임 스테이트가 변할 때 주입
   useEffect(() => {
-    if (nicknameInput.current) nicknameInput.current.textContent = nickname;
-  }, [nickname]);
+    if (nicknameInput.current) nicknameInput.current.textContent = fNick;
+  }, [fNick]);
+
+  // 프로필 스테이트가 변할 때 주입
+  useEffect(() => {
+    setImage(fProf);
+  }, [fProf]);
+
   const handleFocus = () => {
     input.current?.focus();
   };
@@ -335,14 +328,13 @@ const CommentWriteForm: FC<{
       setNickname(nickname);
       const actionCreat = postComment({
         consumerID,
-        content,
-        image: s3URL,
-        nickname,
         sequenceID,
-        uuid,
-        authMethod,
-        authValue,
-        profilePhoto: image ? image : "https://via.placeholder.com/150",
+        nickname,
+        image: s3URL,
+        content,
+        auth,
+        userId,
+        profile: image,
       });
       dispatch(actionCreat);
     }
@@ -359,6 +351,7 @@ const CommentWriteForm: FC<{
       setS3URL(null);
     }
   }, [state.apiStatus, setRefetch]);
+
   // 에러 처리
   useEffect(() => {
     if (state.apiStatus === "REJECTED") {
@@ -368,7 +361,7 @@ const CommentWriteForm: FC<{
   return (
     <>
       <Form>
-        {!authMethod && (
+        {!auth.authMethod && (
           <RequireLogin>로그인하시고 댓글을 등록해 주세요!</RequireLogin>
         )}
         <ProfilePhotoBox>
@@ -379,7 +372,7 @@ const CommentWriteForm: FC<{
             <Row>
               <Nick>
                 <Input
-                  contentEditable={!!authMethod}
+                  contentEditable={!!auth.authMethod}
                   placeholder={"닉네임"}
                   ref={nicknameInput}
                 />
@@ -387,7 +380,9 @@ const CommentWriteForm: FC<{
             </Row>
             <ContentDraft onClick={handleFocus}>
               <Input
-                contentEditable={!!authMethod && state.apiStatus !== "PENDING"}
+                contentEditable={
+                  !!auth.authMethod && state.apiStatus !== "PENDING"
+                }
                 placeholder={"댓글 작성"}
                 ref={input}
               />
@@ -419,7 +414,7 @@ const CommentWriteForm: FC<{
                 type="file"
                 id="input-file"
                 accept="image/*"
-                disabled={!authMethod || fileUploadStatus === "PENDING"}
+                disabled={!auth.authMethod || fileUploadStatus === "PENDING"}
                 style={{ flex: 1, display: "none" }}
                 onChange={(e) => {
                   const files = e.target.files;
@@ -438,7 +433,7 @@ const CommentWriteForm: FC<{
             <Button
               onClick={handleRegister}
               disabled={
-                !authMethod ||
+                !auth.authMethod ||
                 fileUploadStatus === "PENDING" ||
                 state.apiStatus === "PENDING"
               }

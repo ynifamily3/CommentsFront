@@ -21,14 +21,12 @@ const NaverLogin: FC = () => {
       process.env.REACT_APP_NAVER_CLIENT_ID,
       callbackURL
     );
-    var state = naver_id_login.getUniqState();
-    naver_id_login.setButton("white", 2, 40);
+    naver_id_login.setButton("green", 3, 40);
     naver_id_login.setDomain(
       process.env.NODE_ENV === "production"
         ? "https://roco.moe"
         : "http://localhost:3000"
     );
-    naver_id_login.setState(state);
     naver_id_login.setPopup();
     naver_id_login.init_naver_id_login();
   }, []);

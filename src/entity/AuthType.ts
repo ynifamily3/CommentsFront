@@ -5,4 +5,6 @@ export interface INaver {
   token_type: string;
 }
 
-export type AuthType = null | INaver;
+export type AuthState =
+  | { authMethod: null; authValue: null }
+  | { authMethod: "naver"; authValue: INaver };
