@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useLayoutEffect, useState } from "react";
 import styled from "styled-components";
 import { Comment } from "../entity/Comment";
 import Button from "./atom/Button";
@@ -127,6 +127,16 @@ const CommentArticle: FC<CommentArticleProps> = (props) => {
   const handleShowImg = () => {
     setShowImg(true);
   };
+  useLayoutEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const paramsGet = urlParams.get("origin");
+    if (!paramsGet) return;
+    const origin = window.decodeURIComponent(paramsGet);
+    window.parent.postMessage(
+      { height: window.document.body.scrollHeight },
+      origin
+    );
+  }, [showImg]);
   return (
     <Article>
       <ProfilePhotoBox>
