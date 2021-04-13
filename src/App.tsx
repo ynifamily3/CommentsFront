@@ -82,7 +82,9 @@ function App() {
   // firebase를 경유한 인증 처리
   const handleTwitterLogin = (userInfo: ITwitter | null) => {
     if (!userInfo) {
-      alert("Twitter로 로그인하지 못했습니다.");
+      alert(
+        "Twitter로 로그인하지 못했습니다.\n3자 쿠키가 차단되어 있으면 로그인하는데 문제가 있습니다. 양해 바랍니다.\n(Chrome 시크릿 모드 등)"
+      );
       return;
     }
     const { uid, displayName, photoURL } = userInfo;

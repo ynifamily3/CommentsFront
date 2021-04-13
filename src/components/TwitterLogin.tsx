@@ -11,14 +11,16 @@ function TwitterLogin({
     callback(info);
   };
   return (
-    <div>
-      <button onClick={handleTwitterButton}>
+    <div style={{ width: 200 }}>
+      <a href="/" onClick={(e) => e.preventDefault()}>
         <img
-          src="https://cdn.cms-twdigitalassets.com/content/dam/developer-twitter/auth-docs/sign-in-with-twitter-gray.png.twimg.2560.png"
+          width="100%"
+          onClick={handleTwitterButton}
+          src="/twitter_button.png"
           title="트위터로 로그인"
           alt="트위터로 로그인"
         />
-      </button>
+      </a>
     </div>
   );
 }
