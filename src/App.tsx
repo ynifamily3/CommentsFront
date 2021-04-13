@@ -102,7 +102,7 @@ function App() {
       {isValid && (
         <>
           <LoginList>
-            <NaverLogin />
+            {/* <NaverLogin /> */}
             <TwitterLogin callback={handleTwitterLogin} />
           </LoginList>
           <CommentList
