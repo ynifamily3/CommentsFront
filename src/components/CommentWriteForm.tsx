@@ -177,6 +177,10 @@ const postComment = (payload: PostCommentApiPayload) => async (
       const naverAuthValue = auth.authValue;
       headers["Authorization"] = naverAuthValue.access_token;
     }
+    if (auth.authMethod === "twitter") {
+      const twitterAuthValue = auth.authValue;
+      headers["Authorization"] = twitterAuthValue.idToken;
+    }
     const { data } = await axios.post<ApiResultWithCount<Comment[]>>(
       `/comment/${consumerID}/${sequenceID}?skip=${0}&limit=${1}&authType=${
         auth.authMethod

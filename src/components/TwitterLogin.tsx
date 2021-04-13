@@ -1,10 +1,14 @@
-function TwitterLogin() {
-  const loginURL =
-    process.env.NODE_ENV === "production"
-      ? process.env.REACT_APP_TWITTER_LOGIN_PAGE_PRODUCTION
-      : process.env.REACT_APP_TWITTER_LOGIN_PAGE_DEVELOPMENT;
-  const handleTwitterButton = () => {
-    window.open(loginURL, "_blank");
+import { signInWithTwitter } from "../auth/twitter/signInWithTwitter";
+import { ITwitter } from "../entity/AuthType";
+
+function TwitterLogin({
+  callback,
+}: {
+  callback: (userInfo: ITwitter | null) => void;
+}) {
+  const handleTwitterButton = async () => {
+    const info = await signInWithTwitter();
+    callback(info);
   };
   return (
     <div>

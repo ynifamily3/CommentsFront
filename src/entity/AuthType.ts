@@ -6,8 +6,10 @@ export interface INaver {
 }
 
 export interface ITwitter {
-  oauth_token: string;
-  oauth_verifier: string;
+  uid: string;
+  idToken: string;
+  displayName: string | null;
+  photoURL: string | null;
 }
 
 export type AuthState =
