@@ -3,7 +3,7 @@ import "normalize.css";
 import GlobalStyle from "./GlobalStyles";
 import CommentList from "./components/CommentList";
 import NaverLogin from "./components/NaverLogin";
-import { AuthState } from "./entity/AuthType";
+import { AuthState, INaver } from "./entity/AuthType";
 import axios from "axios";
 import { INaverProfileResult } from "./entity/NaverProfile";
 import styled from "styled-components";
@@ -44,7 +44,7 @@ function App() {
           case "naver":
             axios
               .get<INaverProfileResult>("/auth/naver/profile", {
-                headers: { Authorization: authValue.access_token },
+                headers: { Authorization: (authValue as INaver).access_token },
               })
               .then(({ data }) => {
                 if (data.response.id) {
@@ -69,6 +69,10 @@ function App() {
                 setAuth(event.data);
                 (event.source as Window).close();
               });
+            break;
+          case "twitter":
+            console.log(event.data);
+            (event.source as Window).close();
             break;
           default:
             break;

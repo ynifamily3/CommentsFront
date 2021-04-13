@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" href="./loading.css" />
 
-    <title>네이버 로그인</title>
+    <title>트위터 로그인</title>
   </head>
   <body>
     <div class="main-site">
@@ -19,16 +19,13 @@
       </div>
     </div>
     <script type="text/javascript">
-      const raw = location.hash.substr(1).split("&");
+      const raw = location.search.substr(1).split("&");
       let obj = {};
       raw.forEach((x) => {
         const splitted = x.split("=");
         obj[splitted[0]] = splitted[1];
-        if (splitted[0] === "expires_in") {
-          obj["expires_in"] = new Date().getTime() + +splitted[1];
-        }
       });
-      const message = { authMethod: "naver", authValue: obj };
+      const message = { authMethod: "twitter", authValue: obj };
       window.opener.postMessage(message, window.origin);
     </script>
   </body>
