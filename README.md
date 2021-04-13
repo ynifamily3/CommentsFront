@@ -1,5 +1,13 @@
 # CommentsFront
 
+<p align="left">
+  <img src="https://img.shields.io/badge/Maintained%3F-Yes-green?style=for-the-badge">
+  <img src="https://img.shields.io/github/license/ynifamily3/CommentsFront?style=for-the-badge">
+  <img src="https://img.shields.io/github/stars/ynifamily3/CommentsFront?style=for-the-badge">
+  <img src="https://img.shields.io/github/forks/ynifamily3/CommentsFront?color=teal&style=for-the-badge">
+  <img src="https://img.shields.io/github/issues/ynifamily3/CommentsFront?color=violet&style=for-the-badge">
+</p>
+
 간편한 소셜 로그인으로 누구든지 댓글을 달고 볼 수 있는 서비스입니다.
 
 누구나 `embed`해서 사용 가능할 정도로 사용법이 직관적입니다.
