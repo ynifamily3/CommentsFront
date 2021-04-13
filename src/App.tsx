@@ -3,7 +3,7 @@ import "normalize.css";
 import GlobalStyle from "./GlobalStyles";
 import CommentList from "./components/CommentList";
 import NaverLogin from "./components/NaverLogin";
-import { AuthState, INaver } from "./entity/AuthType";
+import { AuthState, INaver, ITwitter } from "./entity/AuthType";
 import axios from "axios";
 import { INaverProfileResult } from "./entity/NaverProfile";
 import styled from "styled-components";
@@ -29,12 +29,10 @@ function App() {
   const [profile, setProfile] = useState<string>(
     "https://via.placeholder.com/150"
   );
-  // receive message
+  // 네이버 인증 처리
   useEffect(() => {
     function receiveMessage(event: MessageEvent<AuthState>) {
       if (event.origin !== window.origin) {
-        console.warn(event.origin, "!==", window.origin);
-        console.log(event.data);
         return;
       }
       // 닉네임, 프로필사진 설정
@@ -70,10 +68,6 @@ function App() {
                 (event.source as Window).close();
               });
             break;
-          case "twitter":
-            console.log(event.data);
-            (event.source as Window).close();
-            break;
           default:
             break;
         }
@@ -84,6 +78,20 @@ function App() {
       window.removeEventListener("message", receiveMessage);
     };
   }, []);
+
+  // firebase를 경유한 인증 처리
+  const handleTwitterLogin = (userInfo: ITwitter | null) => {
+    if (!userInfo) {
+      alert("Twitter로 로그인하지 못했습니다.");
+      return;
+    }
+    const { uid, displayName, photoURL } = userInfo;
+    setUserId(uid);
+    setNickname(displayName ? displayName : "");
+    if (photoURL) setProfile(photoURL);
+    setAuth({ authMethod: "twitter", authValue: userInfo });
+  };
+
   // 초기 렌더링 시 높이 지정
   useSendHeight([userId, auth, nickname, profile]);
   return (
@@ -93,7 +101,7 @@ function App() {
         <>
           <LoginList>
             <NaverLogin />
-            <TwitterLogin />
+            <TwitterLogin callback={handleTwitterLogin} />
           </LoginList>
           <CommentList
             consumerID={splitted[1]}
