@@ -1,1 +1,46 @@
-<mxfile host="app.diagrams.net" modified="2021-04-14T11:39:55.688Z" agent="5.0 (Macintosh; Intel Mac OS X 11_2_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36" version="14.6.0" etag="a5l5C2mQbfAWYYrhyg_0" type="github"><diagram id="DoG3ndfj1dwMmVfzGEI8">UzV2zq1wL0osyPDNT0nNUTV2VTV2LsrPL4GwciucU3NyVI0MMlNUjV1UjYwMgFjVyA2HrCFY1qAgsSg1rwSLBiADYTaQg2Y1AA==</diagram></mxfile>
+<mxfile host="app.diagrams.net" modified="2021-04-14T11:52:44.793Z" agent="5.0 (Macintosh; Intel Mac OS X 11_2_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36" etag="Ilj97PoZ_Wj1qDkEXcWX" version="14.6.0" type="github">
+  <diagram id="DoG3ndfj1dwMmVfzGEI8" name="Page-1">
+    <mxGraphModel dx="1186" dy="739" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="KWsR8sVfNkWi_76bDLRQ-1" value="시스템 구성도" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;" vertex="1" parent="1">
+          <mxGeometry x="328" y="30" width="171" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="KWsR8sVfNkWi_76bDLRQ-2" value="CommentsFront" style="text;html=1;strokeColor=#6c8ebf;fillColor=#dae8fc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;" vertex="1" parent="1">
+          <mxGeometry x="30" y="120" width="230" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="KWsR8sVfNkWi_76bDLRQ-3" value="CommentsAPI" style="text;html=1;strokeColor=#6c8ebf;fillColor=#dae8fc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;" vertex="1" parent="1">
+          <mxGeometry x="580" y="420" width="230" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="KWsR8sVfNkWi_76bDLRQ-4" value="CommentsAuth" style="text;html=1;strokeColor=#6c8ebf;fillColor=#dae8fc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;" vertex="1" parent="1">
+          <mxGeometry x="580" y="470" width="230" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="KWsR8sVfNkWi_76bDLRQ-5" value="/{sequenceID}/{sequenceID}" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;" vertex="1" parent="1">
+          <mxGeometry x="270" y="530" width="350" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="KWsR8sVfNkWi_76bDLRQ-6" value="Firebase" style="text;html=1;strokeColor=#b85450;fillColor=#f8cecc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;" vertex="1" parent="1">
+          <mxGeometry x="580" y="580" width="230" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="KWsR8sVfNkWi_76bDLRQ-7" value="App.tsx" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;" vertex="1" parent="1">
+          <mxGeometry x="230" y="200" width="130" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="KWsR8sVfNkWi_76bDLRQ-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=24;" edge="1" parent="1" source="KWsR8sVfNkWi_76bDLRQ-8" target="KWsR8sVfNkWi_76bDLRQ-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KWsR8sVfNkWi_76bDLRQ-8" value="index.tsx" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;" vertex="1" parent="1">
+          <mxGeometry x="50" y="270" width="130" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="KWsR8sVfNkWi_76bDLRQ-10" value="render" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="140" y="180" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="KWsR8sVfNkWi_76bDLRQ-11" value="&lt;div&gt;&lt;span&gt;dotenv,&amp;nbsp;&lt;/span&gt;&lt;span&gt;firebase,&amp;nbsp;&lt;/span&gt;&lt;span&gt;axios&amp;nbsp;&lt;/span&gt;&lt;span&gt;설정&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="20" y="310" width="190" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="KWsR8sVfNkWi_76bDLRQ-14" value="&lt;ul&gt;&lt;li&gt;postMessage로 들어오는 로그인 시그널 처리(네이버 등)&lt;/li&gt;&lt;li style=&quot;&quot;&gt;수신받은 시그널로 로그인 여부, 프로필 정보 렌더링&lt;/li&gt;&lt;li style=&quot;&quot;&gt;postMessage로 들어오는 높이 값 제어 (3자 사이트 스크립트에서 iframe의 높이 제어)&lt;/li&gt;&lt;/ul&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="210" y="210" width="570" height="90" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
