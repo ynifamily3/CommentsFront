@@ -10,8 +10,12 @@ function TwitterLogin({
     const info = await signInWithTwitter();
     callback(info);
   };
+  const hd = () => {
+    window.open("/handle_twitter.html", "_blank", "width=500,height=600");
+  };
   return (
     <div style={{ width: 200 }}>
+      <button onClick={hd}>열기</button>
       <a href="/" onClick={(e) => e.preventDefault()}>
         <img
           width="100%"
