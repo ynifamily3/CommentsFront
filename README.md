@@ -40,13 +40,16 @@ export function useReducerWithThunk<R extends Reducer<any, any>>(
 
 # 기본 사용 방법
 
+본인의 사이트에 다음 태그를 삽입해 주시면 됩니다.
+
 ```html
-<iframe
-  src="https://roco.moe/{서비스 이용자 ID}/{자유형식 구분자(게시물 ID 등)}"
-  width="100%"
-  height="1000px"
-  style="display: block; border: none"
-/>
+<!-- 댓글 창을 표시할 부분에 다음 태그를 설치해 주세요. -->
+<div id="comments-service-roco-iframe"></div>
+<script type="text/javascript">
+  var comments_service_roco_service_name = "본인의 서비스 이름";
+  var comments_service_roco_sequence = "시퀀스 넘버";
+</script>
+<script type="text/javascript" src="https://roco.moe/comments.js"></script>
 ```
 
 본인의 홈페이지에 위의 스크립트를 삽입하면 다음과 같은 댓글 창이 표시됩니다.
