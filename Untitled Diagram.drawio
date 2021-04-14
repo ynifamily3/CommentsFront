@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-04-14T11:52:44.793Z" agent="5.0 (Macintosh; Intel Mac OS X 11_2_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36" etag="Ilj97PoZ_Wj1qDkEXcWX" version="14.6.0" type="github">
+<mxfile host="app.diagrams.net" modified="2021-04-14T12:07:55.164Z" agent="5.0 (Macintosh; Intel Mac OS X 11_2_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36" etag="mM910ga4nvXuJCdMBqjr" version="14.6.0" type="github">
   <diagram id="DoG3ndfj1dwMmVfzGEI8" name="Page-1">
     <mxGraphModel dx="1186" dy="739" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -11,16 +11,13 @@
           <mxGeometry x="30" y="120" width="230" height="40" as="geometry" />
         </mxCell>
         <mxCell id="KWsR8sVfNkWi_76bDLRQ-3" value="CommentsAPI" style="text;html=1;strokeColor=#6c8ebf;fillColor=#dae8fc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;" vertex="1" parent="1">
-          <mxGeometry x="580" y="420" width="230" height="40" as="geometry" />
+          <mxGeometry x="45" y="990" width="230" height="40" as="geometry" />
         </mxCell>
         <mxCell id="KWsR8sVfNkWi_76bDLRQ-4" value="CommentsAuth" style="text;html=1;strokeColor=#6c8ebf;fillColor=#dae8fc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;" vertex="1" parent="1">
-          <mxGeometry x="580" y="470" width="230" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="KWsR8sVfNkWi_76bDLRQ-5" value="/{sequenceID}/{sequenceID}" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;" vertex="1" parent="1">
-          <mxGeometry x="270" y="530" width="350" height="20" as="geometry" />
+          <mxGeometry x="550" y="990" width="230" height="40" as="geometry" />
         </mxCell>
         <mxCell id="KWsR8sVfNkWi_76bDLRQ-6" value="Firebase" style="text;html=1;strokeColor=#b85450;fillColor=#f8cecc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;" vertex="1" parent="1">
-          <mxGeometry x="580" y="580" width="230" height="40" as="geometry" />
+          <mxGeometry x="299" y="990" width="230" height="40" as="geometry" />
         </mxCell>
         <mxCell id="KWsR8sVfNkWi_76bDLRQ-7" value="App.tsx" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;" vertex="1" parent="1">
           <mxGeometry x="230" y="200" width="130" height="20" as="geometry" />
@@ -37,8 +34,59 @@
         <mxCell id="KWsR8sVfNkWi_76bDLRQ-11" value="&lt;div&gt;&lt;span&gt;dotenv,&amp;nbsp;&lt;/span&gt;&lt;span&gt;firebase,&amp;nbsp;&lt;/span&gt;&lt;span&gt;axios&amp;nbsp;&lt;/span&gt;&lt;span&gt;설정&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;fontSize=15;" vertex="1" parent="1">
           <mxGeometry x="20" y="310" width="190" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="KWsR8sVfNkWi_76bDLRQ-14" value="&lt;ul&gt;&lt;li&gt;postMessage로 들어오는 로그인 시그널 처리(네이버 등)&lt;/li&gt;&lt;li style=&quot;&quot;&gt;수신받은 시그널로 로그인 여부, 프로필 정보 렌더링&lt;/li&gt;&lt;li style=&quot;&quot;&gt;postMessage로 들어오는 높이 값 제어 (3자 사이트 스크립트에서 iframe의 높이 제어)&lt;/li&gt;&lt;/ul&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;fontSize=15;" vertex="1" parent="1">
-          <mxGeometry x="210" y="210" width="570" height="90" as="geometry" />
+        <mxCell id="KWsR8sVfNkWi_76bDLRQ-14" value="&lt;ul&gt;&lt;li&gt;postMessage로 들어오는 로그인 시그널 처리(Naver, Twitter 등)&lt;/li&gt;&lt;li&gt;수신받은 시그널로 로그인 여부, 프로필 정보 렌더링&lt;/li&gt;&lt;li&gt;postMessage로 들어오는 높이 값 제어 (3자 사이트 스크립트에서 iframe의 높이 제어)&lt;/li&gt;&lt;/ul&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="220" y="220" width="570" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="KWsR8sVfNkWi_76bDLRQ-15" value="LoginList" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;" vertex="1" parent="1">
+          <mxGeometry x="50" y="415" width="130" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="KWsR8sVfNkWi_76bDLRQ-16" value="CommentList" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;" vertex="1" parent="1">
+          <mxGeometry x="328" y="415" width="130" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="KWsR8sVfNkWi_76bDLRQ-17" value="TwitterLogin&lt;br style=&quot;font-size: 20px;&quot;&gt;NaverLogin" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;" vertex="1" parent="1">
+          <mxGeometry x="80" y="445" width="130" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="KWsR8sVfNkWi_76bDLRQ-18" value="&lt;ul&gt;&lt;li&gt;소셜 로그인 버튼 렌더링&lt;/li&gt;&lt;li&gt;로그인 이벤트 핸들러 연결&lt;/li&gt;&lt;/ul&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="20" y="500" width="210" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="KWsR8sVfNkWi_76bDLRQ-19" value="" style="endArrow=classic;html=1;fontSize=20;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="310" y="330" as="sourcePoint" />
+            <mxPoint x="120" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KWsR8sVfNkWi_76bDLRQ-20" value="" style="endArrow=classic;html=1;fontSize=20;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" target="KWsR8sVfNkWi_76bDLRQ-16">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="310" y="330" as="sourcePoint" />
+            <mxPoint x="130" y="420" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KWsR8sVfNkWi_76bDLRQ-22" value="render" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="230" y="360" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="KWsR8sVfNkWi_76bDLRQ-23" value="render" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="380" y="360" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="KWsR8sVfNkWi_76bDLRQ-24" value="&lt;ul&gt;&lt;li&gt;댓글 창 렌더링&lt;/li&gt;&lt;/ul&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="458" y="400" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="KWsR8sVfNkWi_76bDLRQ-25" value="CommentWriteForm&lt;br&gt;&lt;br&gt;&lt;br&gt;CommentArticle[]&lt;br&gt;&lt;br&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;" vertex="1" parent="1">
+          <mxGeometry x="360" y="435" width="370" height="155" as="geometry" />
+        </mxCell>
+        <mxCell id="KWsR8sVfNkWi_76bDLRQ-26" value="&lt;ul&gt;&lt;li&gt;댓글 작성 Form 렌더링&lt;/li&gt;&lt;li&gt;파일 업로드 핸들링&lt;/li&gt;&lt;/ul&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="540" y="430" width="190" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="KWsR8sVfNkWi_76bDLRQ-27" value="&lt;ul&gt;&lt;li&gt;댓글 리스트 렌더링&lt;/li&gt;&lt;/ul&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="540" y="510" width="170" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="KWsR8sVfNkWi_76bDLRQ-30" value="Actions" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;fontSize=24;fillColor=#f5f5f5;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="30" y="620" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="KWsR8sVfNkWi_76bDLRQ-32" value="&lt;div style=&quot;color: rgb(248 , 248 , 242) ; background-color: rgb(26 , 20 , 38) ; font-family: &amp;#34;dank mono&amp;#34; , &amp;#34;jk gothic l&amp;#34; , &amp;#34;d2coding&amp;#34; , &amp;#34;menlo&amp;#34; , &amp;#34;monaco&amp;#34; , &amp;#34;courier new&amp;#34; , monospace , &amp;#34;menlo&amp;#34; , &amp;#34;monaco&amp;#34; , &amp;#34;courier new&amp;#34; , monospace ; font-size: 16px ; line-height: 24px&quot;&gt;&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fontSize=24;" vertex="1" parent="1">
+          <mxGeometry x="150" y="705" width="20" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="KWsR8sVfNkWi_76bDLRQ-33" value="&lt;i style=&quot;font-size: 20px&quot;&gt;&lt;font face=&quot;Noto Sans KR&quot; data-font-src=&quot;https://fonts.googleapis.com/css?family=Noto+Sans+KR&quot; style=&quot;font-size: 20px&quot;&gt;FETCH_COMMENT_LIST 〉Action Creator에 의해 발행됨&amp;nbsp;&lt;br style=&quot;font-size: 20px&quot;&gt;&amp;nbsp; &amp;nbsp; FETCH_COMMENT_LIST_SUCCESS&amp;nbsp;&lt;/font&gt;&lt;/i&gt;&lt;i&gt;&lt;font face=&quot;Noto Sans KR&quot; data-font-src=&quot;https://fonts.googleapis.com/css?family=Noto+Sans+KR&quot;&gt;(상위 액션에 의해 실행)&lt;/font&gt;&lt;/i&gt;&lt;i style=&quot;font-size: 20px&quot;&gt;&lt;font face=&quot;Noto Sans KR&quot; data-font-src=&quot;https://fonts.googleapis.com/css?family=Noto+Sans+KR&quot; style=&quot;font-size: 20px&quot;&gt;&lt;br style=&quot;font-size: 20px&quot;&gt;&amp;nbsp; &amp;nbsp; FETCH_COMMENT_LIST_FAILURE&amp;nbsp;&lt;/font&gt;&lt;/i&gt;&lt;i&gt;&lt;font face=&quot;Noto Sans KR&quot; data-font-src=&quot;https://fonts.googleapis.com/css?family=Noto+Sans+KR&quot;&gt;(상위 액션에 의해 실행)&lt;/font&gt;&lt;/i&gt;&lt;i style=&quot;font-size: 20px&quot;&gt;&lt;font face=&quot;Noto Sans KR&quot; data-font-src=&quot;https://fonts.googleapis.com/css?family=Noto+Sans+KR&quot; style=&quot;font-size: 20px&quot;&gt;&lt;br style=&quot;font-size: 20px&quot;&gt;CHANGE_SKIP_LIMIT&lt;br&gt;&amp;nbsp; &amp;nbsp;&amp;nbsp;&lt;/font&gt;&lt;/i&gt;&lt;i&gt;&lt;font face=&quot;Noto Sans KR&quot; data-font-src=&quot;https://fonts.googleapis.com/css?family=Noto+Sans+KR&quot;&gt;CHANGE_SKIP_LIMIT_SUCCESS&lt;br&gt;&amp;nbsp; &amp;nbsp;&amp;nbsp;&lt;/font&gt;&lt;/i&gt;&lt;i&gt;&lt;font face=&quot;Noto Sans KR&quot; data-font-src=&quot;https://fonts.googleapis.com/css?family=Noto+Sans+KR&quot;&gt;CHANGE_SKIP_LIMIT_FAILURE&lt;br&gt;&lt;/font&gt;&lt;/i&gt;&lt;i style=&quot;font-size: 20px&quot;&gt;&lt;font face=&quot;Noto Sans KR&quot; data-font-src=&quot;https://fonts.googleapis.com/css?family=Noto+Sans+KR&quot; style=&quot;font-size: 20px&quot;&gt;WRITE_COMMENT&amp;nbsp;&lt;/font&gt;&lt;/i&gt;&lt;i&gt;&lt;font face=&quot;Noto Sans KR&quot; data-font-src=&quot;https://fonts.googleapis.com/css?family=Noto+Sans+KR&quot;&gt;〉Action Creator에 의해 발행됨&amp;nbsp;&lt;br&gt;&lt;/font&gt;&lt;/i&gt;&lt;i style=&quot;font-size: 20px&quot;&gt;&lt;font face=&quot;Noto Sans KR&quot; data-font-src=&quot;https://fonts.googleapis.com/css?family=Noto+Sans+KR&quot; style=&quot;font-size: 20px&quot;&gt;&amp;nbsp; &amp;nbsp; WRITE_COMMENT_SUCCESS (상위 액션에 의해 실행)&lt;br style=&quot;font-size: 20px&quot;&gt;&amp;nbsp; &amp;nbsp; WRITE_COMMENT_FAILURE&amp;nbsp;&lt;/font&gt;&lt;/i&gt;&lt;i&gt;&lt;font face=&quot;Noto Sans KR&quot; data-font-src=&quot;https://fonts.googleapis.com/css?family=Noto+Sans+KR&quot;&gt;(상위 액션에 의해 실행)&lt;/font&gt;&lt;/i&gt;&lt;i style=&quot;font-size: 20px&quot;&gt;&lt;font face=&quot;Noto Sans KR&quot; data-font-src=&quot;https://fonts.googleapis.com/css?family=Noto+Sans+KR&quot; style=&quot;font-size: 20px&quot;&gt;&lt;br style=&quot;font-size: 20px&quot;&gt;&lt;/font&gt;&lt;/i&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;fontSize=20;fillColor=#f5f5f5;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="30" y="650" width="560" height="240" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
