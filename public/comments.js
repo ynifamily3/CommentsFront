@@ -9,9 +9,9 @@
   }
   window.addEventListener("message", hnd, false);
   target.innerHTML = `<iframe
-  src="https://roco.moe/swordmaster/1?origin=${window.encodeURIComponent(
-    window.origin
-  )}"
+  src="https://roco.moe/${window["comments_service_roco_service_name"]}/${
+    window["comments_service_roco_sequence"]
+  }?origin=${window.encodeURIComponent(window.origin)}"
   width="100%"
   height="100px"
   style="display: block; border: none"
