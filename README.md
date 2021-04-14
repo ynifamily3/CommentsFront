@@ -44,7 +44,7 @@ export function useReducerWithThunk<R extends Reducer<any, any>>(
 
 ```html
 <!-- 댓글 창을 표시할 부분에 다음 태그를 설치해 주세요. -->
-<div id="comments-service-roco-iframe"></div>
+<div id="comments-service-roco"></div>
 <script type="text/javascript">
   var comments_service_roco_service_name = "본인의 서비스 이름";
   var comments_service_roco_sequence = "시퀀스 넘버";
