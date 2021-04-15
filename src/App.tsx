@@ -29,10 +29,17 @@ function App() {
   const [profile, setProfile] = useState<string>(
     "https://via.placeholder.com/150"
   );
-  // 네이버 인증 처리
+  // 소셜 인증 처리
   useEffect(() => {
     function receiveMessage(event: MessageEvent<AuthState>) {
-      if (event.origin !== window.origin) {
+      // 허용 리스트
+      const allowedOrigin = [
+        "http://localhost:3000",
+        "http://localhost:8081",
+        "https://auth.roco.moe",
+        "https://roco.moe", // naver callback (추후에 passport로 이관)
+      ];
+      if (!allowedOrigin.includes(event.origin)) {
         return;
       }
       // 닉네임, 프로필사진 설정
@@ -68,6 +75,18 @@ function App() {
                 (event.source as Window).close();
               });
             break;
+          case "twitter":
+            console.log("전달 받음(트위터)", authValue);
+            const { displayName, uid, photo } = authValue as ITwitter;
+            setUserId(uid);
+            setNickname(displayName ? displayName : "");
+            setProfile((p) => (photo ? photo : p));
+            setAuth({
+              authMethod: "twitter",
+              authValue: { displayName, uid, photo },
+            });
+            (event.source as Window).close();
+            break;
           default:
             break;
         }
@@ -79,21 +98,6 @@ function App() {
     };
   }, []);
 
-  // firebase를 경유한 인증 처리
-  const handleTwitterLogin = (userInfo: ITwitter | null) => {
-    if (!userInfo) {
-      alert(
-        "Twitter로 로그인하지 못했습니다.\n3자 쿠키가 차단되어 있으면 로그인하는데 문제가 있습니다. 양해 바랍니다.\n(Chrome 시크릿 모드 등)"
-      );
-      return;
-    }
-    const { uid, displayName, photoURL } = userInfo;
-    setUserId(uid);
-    setNickname(displayName ? displayName : "");
-    if (photoURL) setProfile(photoURL);
-    setAuth({ authMethod: "twitter", authValue: userInfo });
-  };
-
   // 초기 렌더링 시 높이 지정
   useSendHeight([userId, auth, nickname, profile]);
   return (
@@ -102,8 +106,8 @@ function App() {
       {isValid && (
         <>
           <LoginList>
-            {/* <NaverLogin /> */}
-            <TwitterLogin callback={handleTwitterLogin} />
+            <NaverLogin />
+            <TwitterLogin />
           </LoginList>
           <CommentList
             consumerID={splitted[1]}
