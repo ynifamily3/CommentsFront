@@ -197,7 +197,7 @@ const postComment = (payload: PostCommentApiPayload) => async (
           imageData: image,
         },
       },
-      { headers }
+      { withCredentials: true }
     );
     console.log(data);
     const action: WriteCommentSuccessAction = {
