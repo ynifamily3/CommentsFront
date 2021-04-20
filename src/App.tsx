@@ -77,13 +77,18 @@ function App() {
             break;
           case "twitter":
             console.log("전달 받음(트위터)", authValue);
-            const { displayName, uid, photo } = authValue as ITwitter;
+            const {
+              displayName,
+              uid,
+              photo,
+              authorization,
+            } = authValue as ITwitter;
             setUserId(uid);
             setNickname(displayName ? displayName : "");
             setProfile((p) => (photo ? photo : p));
             setAuth({
               authMethod: "twitter",
-              authValue: { displayName, uid, photo },
+              authValue: { displayName, uid, photo, authorization },
             });
             (event.source as Window).close();
             break;

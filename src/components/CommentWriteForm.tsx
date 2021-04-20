@@ -179,7 +179,7 @@ const postComment = (payload: PostCommentApiPayload) => async (
     }
     if (auth.authMethod === "twitter") {
       const twitterAuthValue = auth.authValue;
-      // headers["Authorization"] = twitterAuthValue.idToken;
+      headers["Authorization"] = twitterAuthValue.authorization;
     }
     const { data } = await axios.post<ApiResultWithCount<Comment[]>>(
       `/comment/${consumerID}/${sequenceID}?skip=${0}&limit=${1}&authType=${
@@ -197,7 +197,7 @@ const postComment = (payload: PostCommentApiPayload) => async (
           imageData: image,
         },
       },
-      { withCredentials: true }
+      { headers }
     );
     console.log(data);
     const action: WriteCommentSuccessAction = {

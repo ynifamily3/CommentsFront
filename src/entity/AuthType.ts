@@ -9,6 +9,7 @@ export interface ITwitter {
   uid: string;
   displayName: string | null;
   photo: string | null;
+  authorization: string;
 }
 
 export type AuthState =
