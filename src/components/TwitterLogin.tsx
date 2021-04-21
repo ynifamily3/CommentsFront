@@ -2,8 +2,8 @@ function TwitterLogin() {
   const handleClick = () => {
     window.open(
       process.env.NODE_ENV === "production"
-        ? "https://auth.roco.moe/auth/twitter"
-        : "http://localhost:8081/auth/twitter",
+        ? process.env.REACT_APP_TWITTER_LOGIN_PAGE_PRODUCTION
+        : process.env.REACT_APP_TWITTER_LOGIN_PAGE_DEVELOPMENT,
       "_blank",
       "width=500,height=600"
     );

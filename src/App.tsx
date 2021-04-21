@@ -9,6 +9,7 @@ import { INaverProfileResult } from "./entity/NaverProfile";
 import styled from "styled-components";
 import TwitterLogin from "./components/TwitterLogin";
 import useSendHeight from "./hooks/useSendHeight";
+import Branding from "./components/Branding";
 
 const splitted = window.location.pathname.split("/");
 const isValid =
@@ -37,7 +38,6 @@ function App() {
         "http://localhost:3000",
         "http://localhost:8081",
         "https://auth.roco.moe",
-        "https://roco.moe", // naver callback (추후에 passport로 이관)
       ];
       if (!allowedOrigin.includes(event.origin)) {
         return;
@@ -76,19 +76,18 @@ function App() {
               });
             break;
           case "twitter":
-            console.log("전달 받음(트위터)", authValue);
             const {
               displayName,
-              uid,
+              id,
               photo,
               authorization,
             } = authValue as ITwitter;
-            setUserId(uid);
+            setUserId(id);
             setNickname(displayName ? displayName : "");
             setProfile((p) => (photo ? photo : p));
             setAuth({
               authMethod: "twitter",
-              authValue: { displayName, uid, photo, authorization },
+              authValue: { displayName, id, photo, authorization },
             });
             (event.source as Window).close();
             break;
@@ -108,6 +107,7 @@ function App() {
   return (
     <>
       <GlobalStyle />
+      {!isValid && <Branding />}
       {isValid && (
         <>
           <LoginList>

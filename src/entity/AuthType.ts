@@ -6,7 +6,7 @@ export interface INaver {
 }
 
 export interface ITwitter {
-  uid: string;
+  id: string;
   displayName: string | null;
   photo: string | null;
   authorization: string;
