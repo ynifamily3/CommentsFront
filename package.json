@@ -52,7 +52,7 @@
     ]
   },
   "devDependencies": {
-    "@types/axios": "0.14.0",
-    "surge": "0.22.1"
+    "@types/axios": "^0.14.0",
+    "surge": "0.23.0"
   }
 }
