@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import "normalize.css";
 import GlobalStyle from "./GlobalStyles";
 import CommentList from "./components/CommentList";
@@ -11,16 +11,51 @@ import TwitterLogin from "./components/TwitterLogin";
 import useSendHeight from "./hooks/useSendHeight";
 import Branding from "./components/Branding";
 
-const splitted = window.location.pathname.split("/");
-const isValid =
-  splitted.length === 3 && splitted[1].length > 0 && splitted[2].length > 0;
 const LoginList = styled.div`
   display: flex;
   justify-content: flex-end;
   padding: 1em;
 `;
 
+const splitted = window.location.pathname.split("/");
+const isValid =
+  splitted.length === 3 && splitted[1].length > 0 && splitted[2].length > 0;
+
+interface UserInfo {
+  auth: AuthState;
+  userId: string;
+  nickname: string;
+  profile: string;
+}
+
+interface Action {
+  type: string;
+  payload?: unknown;
+}
+
+interface UpdateUserInfoAction extends Action {
+  type: "UPDATE_USER_INFO";
+  payload: UserInfo;
+}
+
+const initialState: UserInfo = {
+  auth: { authMethod: null, authValue: null },
+  userId: "",
+  nickname: "",
+  profile: "https://via.placeholder.com/150",
+};
+
+function reducer(state: UserInfo, action: Action): UserInfo {
+  switch (action.type) {
+    case "UPDATE_USER_INFO":
+      return {
+        ...(action.payload as UserInfo),
+      };
+  }
+}
+
 function App() {
+  const [state, dispatch] = useReducer(reducer, initialState);
   const [auth, setAuth] = useState<AuthState>({
     authMethod: null,
     authValue: null,
