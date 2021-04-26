@@ -28,15 +28,12 @@ interface UserInfo {
   profile: string;
 }
 
-interface Action {
-  type: string;
-  payload?: unknown;
-}
-
-interface UpdateUserInfoAction extends Action {
+interface UpdateUserInfoAction {
   type: "UPDATE_USER_INFO";
   payload: UserInfo;
 }
+
+type Action = UpdateUserInfoAction;
 
 const initialState: UserInfo = {
   auth: { authMethod: null, authValue: null },
@@ -49,22 +46,23 @@ function reducer(state: UserInfo, action: Action): UserInfo {
   switch (action.type) {
     case "UPDATE_USER_INFO":
       return {
-        ...(action.payload as UserInfo),
+        ...action.payload,
       };
   }
 }
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [auth, setAuth] = useState<AuthState>({
-    authMethod: null,
-    authValue: null,
-  });
-  const [userId, setUserId] = useState<string>(""); // 고유 유저 ID (서비스 제공자마다 다름)
-  const [nickname, setNickname] = useState<string>("");
-  const [profile, setProfile] = useState<string>(
-    "https://via.placeholder.com/150"
-  );
+  const { auth, userId, nickname, profile } = state;
+  // const [auth, setAuth] = useState<AuthState>({
+  //   authMethod: null,
+  //   authValue: null,
+  // });
+  // const [userId, setUserId] = useState<string>(""); // 고유 유저 ID (서비스 제공자마다 다름)
+  // const [nickname, setNickname] = useState<string>("");
+  // const [profile, setProfile] = useState<string>(
+  //   "https://via.placeholder.com/150"
+  // );
   // 소셜 인증 처리
   useEffect(() => {
     function receiveMessage(event: MessageEvent<AuthState>) {
@@ -87,15 +85,17 @@ function App() {
                 headers: { Authorization: (authValue as INaver).access_token },
               })
               .then(({ data }) => {
-                if (data.response.id) {
-                  setUserId(data.response.id);
-                }
-                if (data.response.nickname) {
-                  setNickname(data.response.nickname);
-                }
-                if (data.response.profile_image) {
-                  setProfile(data.response.profile_image);
-                }
+                dispatch({
+                  type: "UPDATE_USER_INFO",
+                  payload: {
+                    auth: event.data,
+                    userId: data.response.id,
+                    nickname: data.response.nickname ?? "",
+                    profile:
+                      data.response.profile_image ??
+                      "https://via.placeholder.com/150",
+                  },
+                });
               })
               .catch((error) => {
                 console.log("Err: ", error);
@@ -105,8 +105,6 @@ function App() {
               })
               .finally(() => {
                 // 팝업 창 닫히도록 설정
-                // Auth 값 설정
-                setAuth(event.data);
                 (event.source as Window).close();
               });
             break;
@@ -117,12 +115,17 @@ function App() {
               photo,
               authorization,
             } = authValue as ITwitter;
-            setUserId(id);
-            setNickname(displayName ? displayName : "");
-            setProfile((p) => (photo ? photo : p));
-            setAuth({
-              authMethod: "twitter",
-              authValue: { displayName, id, photo, authorization },
+            dispatch({
+              type: "UPDATE_USER_INFO",
+              payload: {
+                auth: {
+                  authMethod: "twitter",
+                  authValue: { displayName, id, photo, authorization },
+                },
+                userId: id,
+                nickname: displayName ?? "",
+                profile: photo ?? "https://via.placeholder.com/150",
+              },
             });
             (event.source as Window).close();
             break;
