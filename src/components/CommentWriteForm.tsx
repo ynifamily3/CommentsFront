@@ -12,9 +12,9 @@ import {
 } from "../action/CommentAction";
 import { ApiResult, ApiResultWithCount } from "../entity/ApiResult";
 import { Comment } from "../entity/Comment";
+import { CommentListProps } from "../entity/CommentList";
 import { useReducerWithThunk } from "../hooks/useReducerWithThunk";
 import Button from "./atom/Button";
-import { CommentListProps } from "./CommentList";
 
 const Form = styled.div`
   position: relative;

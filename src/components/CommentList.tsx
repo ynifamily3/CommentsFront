@@ -18,8 +18,8 @@ import CommentWriteForm from "./CommentWriteForm";
 import "./atom/Spinner.scss";
 import { ReactComponent as CloseIcon } from "./atom/close.svg";
 import Button from "./atom/Button";
-import { AuthState } from "../entity/AuthType";
 import useSendHeight from "../hooks/useSendHeight";
+import { CommentListApiPayload, CommentListProps } from "../entity/CommentList";
 
 const CList = styled.div``;
 const Divider = styled.div`
@@ -40,22 +40,6 @@ const Loading = styled.div`
   align-items: center;
   padding: 1em;
 `;
-
-export interface CommentListProps {
-  consumerID: string;
-  sequenceID: string;
-  userId: string;
-  auth: AuthState;
-  nickname: string;
-  profile: string;
-}
-
-interface CommentListApiPayload {
-  consumerID: string;
-  sequenceID: string;
-  skip: number;
-  limit: number;
-}
 
 const getCommentList = ({
   consumerID,
