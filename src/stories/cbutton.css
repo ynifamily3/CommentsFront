@@ -1,0 +1,54 @@
+.storybook-cbutton {
+  font-family: "Noto Sans KR", sans-serif;
+  border: none;
+  color: black;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+  border-radius: 3px;
+  background-color: #fff03c;
+}
+
+.storybook-cbutton:hover {
+  transform: translateY(-2px);
+}
+
+.storybook-cbutton:active {
+  transform: translateY(0px);
+  box-shadow: none;
+}
+
+.storybook-cbutton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.storybook-cbutton:hover:disabled {
+  transform: none;
+  animation: doridori 0.5s;
+}
+
+@keyframes doridori {
+  0% {
+    transform: translateX(-1px);
+  }
+  20% {
+    transform: translateX(1px);
+  }
+  40% {
+    transform: translateX(-1px);
+  }
+  60% {
+    transform: translateX(1px);
+  }
+  80% {
+    transform: translateX(-0.5px);
+  }
+  100% {
+    transform: translateX(0.5px);
+  }
+}

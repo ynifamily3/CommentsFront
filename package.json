@@ -31,12 +31,24 @@
     "build": "cross-env NODE_ENV=production REACT_APP_ENDPOINT=https://api.roco.moe react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "cross-env NODE_ENV=production REACT_APP_ENDPOINT=https://api.roco.moe GENERATE_SOURCEMAP=false react-scripts build && mv ./build/index.html build/200.html && surge ./build/ roco.moe"
+    "deploy": "cross-env NODE_ENV=production REACT_APP_ENDPOINT=https://api.roco.moe GENERATE_SOURCEMAP=false react-scripts build && mv ./build/index.html build/200.html && surge ./build/ roco.moe",
+    "storybook": "start-storybook -p 6006 -s public",
+    "build-storybook": "build-storybook -s public"
   },
   "eslintConfig": {
     "extends": [
       "react-app",
       "react-app/jest"
+    ],
+    "overrides": [
+      {
+        "files": [
+          "**/*.stories.*"
+        ],
+        "rules": {
+          "import/no-anonymous-default-export": "off"
+        }
+      }
     ]
   },
   "browserslist": {
@@ -52,6 +64,12 @@
     ]
   },
   "devDependencies": {
+    "@storybook/addon-actions": "^6.2.9",
+    "@storybook/addon-essentials": "^6.2.9",
+    "@storybook/addon-links": "^6.2.9",
+    "@storybook/node-logger": "^6.2.9",
+    "@storybook/preset-create-react-app": "^3.1.7",
+    "@storybook/react": "^6.2.9",
     "@types/axios": "^0.14.0",
     "surge": "0.23.0"
   }
