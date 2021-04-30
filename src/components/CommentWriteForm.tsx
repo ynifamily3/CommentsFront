@@ -14,7 +14,7 @@ import { ApiResult, ApiResultWithCount } from "../entity/ApiResult";
 import { Comment } from "../entity/Comment";
 import { CommentListProps } from "../entity/CommentList";
 import { useReducerWithThunk } from "../hooks/useReducerWithThunk";
-import Button from "./atom/Button";
+import { CButton } from "../stories/CButton";
 
 const Form = styled.div`
   position: relative;
@@ -430,16 +430,15 @@ const CommentWriteForm: FC<CommentWriteFormProps> = ({
                 }}
               />
             </Attachment>
-            <Button
+            <CButton
               onClick={handleRegister}
               disabled={
                 !auth.authMethod ||
                 fileUploadStatus === "PENDING" ||
                 state.apiStatus === "PENDING"
               }
-            >
-              등록
-            </Button>
+              label="등록"
+            />
           </Bottom>
         </RowC>
       </Form>
