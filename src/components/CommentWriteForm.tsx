@@ -109,7 +109,8 @@ const RequireLogin = styled.div`
   background-color: rgba(0, 0, 0, 0.1);
   position: absolute;
   z-index: 1;
-  width: calc(100% - 12px);
+  left: 0;
+  width: calc(100%);
   height: calc(100% + 12px);
   font-size: 1.2em;
   top: -12px;
@@ -155,10 +156,6 @@ const postComment = (payload: PostCommentApiPayload) => async (
   });
   try {
     let headers: Record<string, string> = {};
-    if (auth.authMethod === "naver") {
-      const naverAuthValue = auth.authValue;
-      headers["Authorization"] = naverAuthValue.access_token;
-    }
     if (auth.authMethod === "twitter") {
       const twitterAuthValue = auth.authValue;
       headers["Authorization"] = twitterAuthValue.authorization;

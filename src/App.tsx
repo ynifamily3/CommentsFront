@@ -2,7 +2,6 @@ import { useReducer } from "react";
 import "normalize.css";
 import GlobalStyle from "./GlobalStyles";
 import CommentList from "./components/CommentList";
-import NaverLogin from "./components/NaverLogin";
 import styled from "styled-components";
 import TwitterLogin from "./components/TwitterLogin";
 import useSendHeight from "./hooks/useSendHeight";
@@ -52,7 +51,6 @@ function App() {
       {isValid && (
         <>
           <LoginList>
-            <NaverLogin />
             <TwitterLogin />
           </LoginList>
           <CommentList
