@@ -1,5 +1,6 @@
 .storybook-cbutton {
-  font-family: "Noto Sans KR", sans-serif;
+  font-family: -apple-system, system-ui, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
   border: none;
   color: black;
   padding: 15px 32px;

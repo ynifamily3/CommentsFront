@@ -94,24 +94,6 @@ const Attachment = styled.div`
   flex: 1;
 `;
 
-const UploadButton = styled.label`
-  background-color: #ff6600;
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  cursor: pointer;
-  :hover {
-    background-color: #ff5f5f;
-  }
-  :disabled {
-    opacity: 0.5;
-  }
-`;
-
 const UploadStatus = styled.div`
   margin-left: 1em;
   overflow-wrap: break-word;
@@ -272,6 +254,7 @@ const CommentWriteForm: FC<CommentWriteFormProps> = ({
   const [image, setImage] = useState(fProf);
 
   const input = useRef<HTMLDivElement>(null);
+  const fileInput = useRef<HTMLInputElement>(null);
   const nicknameInput = useRef<HTMLDivElement>(null);
   const [state, dispatch] = useReducerWithThunk(reducer, initialState);
   // 파일 첨부는 action으로 관리하지 않을 것입니다.
@@ -390,18 +373,24 @@ const CommentWriteForm: FC<CommentWriteFormProps> = ({
           </RowC>
           <Bottom>
             <Attachment>
-              <UploadButton
-                className="input-file-button"
-                htmlFor="input-file"
-                style={
+              <CButton
+                label="사진 첨부"
+                color="white"
+                backgroundColor="#ff6600"
+                onClick={() => {
+                  if (fileInput.current) {
+                    console.log(fileInput.current);
+                    fileInput.current.click();
+                  }
+                }}
+                disabled={
+                  !auth.authMethod ||
                   fileUploadStatus === "PENDING" ||
                   state.apiStatus === "PENDING"
-                    ? { opacity: 0.5 }
-                    : { opacity: 1 }
+                    ? true
+                    : false
                 }
-              >
-                사진 첨부
-              </UploadButton>
+              />
               <UploadStatus>
                 {fileUploadStatus === "PENDING" &&
                   `${attachedImage?.name} 업로드 중...`}
@@ -411,6 +400,7 @@ const CommentWriteForm: FC<CommentWriteFormProps> = ({
                   `${attachedImage?.name} 업로드 실패`}
               </UploadStatus>
               <input
+                ref={fileInput}
                 type="file"
                 id="input-file"
                 accept="image/*"

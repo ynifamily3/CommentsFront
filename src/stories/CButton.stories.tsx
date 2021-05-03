@@ -16,10 +16,12 @@ export const Normal = Template.bind({});
 Normal.args = {
   disabled: false,
   label: "하이!",
+  color: "rgb(15,20,25)",
 };
 
 export const Disabled = Template.bind({});
 Disabled.args = {
   disabled: true,
   label: "하이! (disabled)",
+  color: "rgb(15,20,25)",
 };
