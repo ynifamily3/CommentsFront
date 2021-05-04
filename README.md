@@ -12,7 +12,7 @@
 
 누구나 `embed`해서 사용 가능할 정도로 사용법이 직관적입니다.
 
-(데모: [https://roco.moe/test/test](https://roco.moe/test/test))
+(데모: [https://roco.moe/swordmaster/1](https://roco.moe/swordmaster/1))
 
 # 시스템 구성도
 
@@ -70,9 +70,17 @@ export function useReducerWithThunk<R extends Reducer<any, any>>(
 ```
 
 # 의존 그래프
+
 - https://github.com/pahen/madge
 - 순환 의존성은 되도록 해결할 예정
+
 ```bash
  madge ./src/index.tsx -i ~/Pictures/test.png
 ```
+
 ![의존 그래프](https://user-images.githubusercontent.com/13795765/114711454-ed1a9000-9d69-11eb-901c-bf6301d8bd58.png)
+
+# 리소스
+
+- [Google Fonts](https://fonts.google.com/specimen/Noto+Sans+KR)
+- [XEIcon](https://xpressengine.github.io/XEIcon/library-2.3.3.html)

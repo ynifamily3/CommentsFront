@@ -2,18 +2,10 @@ import { useReducer } from "react";
 import "normalize.css";
 import GlobalStyle from "./GlobalStyles";
 import CommentList from "./components/CommentList";
-import styled from "styled-components";
-import TwitterLogin from "./components/TwitterLogin";
 import useSendHeight from "./hooks/useSendHeight";
 import Branding from "./components/Branding";
 import useSocialAuth from "./hooks/useSocialAuth";
 import { UserInfo, UAction } from "./entity/UserInfo";
-
-const LoginList = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  padding: 1em;
-`;
 
 const splitted = window.location.pathname.split("/");
 const isValid =
@@ -49,19 +41,14 @@ function App() {
       <GlobalStyle />
       {!isValid && <Branding />}
       {isValid && (
-        <>
-          <LoginList>
-            <TwitterLogin />
-          </LoginList>
-          <CommentList
-            consumerID={splitted[1]}
-            sequenceID={splitted[2]}
-            userId={userId}
-            auth={auth}
-            nickname={nickname}
-            profile={profile}
-          />
-        </>
+        <CommentList
+          consumerID={splitted[1]}
+          sequenceID={splitted[2]}
+          userId={userId}
+          auth={auth}
+          nickname={nickname}
+          profile={profile}
+        />
       )}
     </>
   );

@@ -15,6 +15,7 @@ import { Comment } from "../entity/Comment";
 import { CommentListProps } from "../entity/CommentList";
 import { useReducerWithThunk } from "../hooks/useReducerWithThunk";
 import { CButton } from "../stories/CButton";
+import TwitterLogin from "./TwitterLogin";
 
 const Form = styled.div`
   position: relative;
@@ -41,6 +42,11 @@ const Nick = styled.div`
   color: #0f1419;
   width: 100%;
   cursor: text;
+  border: 1px solid rgba(15, 20, 25, 0.25);
+  border-radius: 3px;
+  margin-bottom: 0.5em;
+  width: 100%;
+  max-width: 600px;
 `;
 
 const RowC = styled.div`
@@ -55,6 +61,8 @@ const Row = styled.div`
 `;
 
 const ContentDraft = styled.div`
+  border: 1px solid rgba(15, 20, 25, 0.25);
+  border-radius: 3px;
   overflow-wrap: break-word;
   word-break: break-all;
   color: rgb(15, 20, 25);
@@ -65,15 +73,13 @@ const ContentDraft = styled.div`
   min-height: 50px;
   cursor: text;
 `;
-
 const Input = styled.div`
+  padding-left: 0.5em;
   line-height: 24px;
   size: 20px;
   font-weight: inherit;
   color: #0f1419;
   outline: none;
-  overflow-wrap: break-word;
-  word-break: break-all;
   :empty::before {
     content: attr(placeholder);
     display: block; /* For Firefox */
@@ -81,45 +87,35 @@ const Input = styled.div`
   }
 `;
 
+const ContentInput = styled(Input)`
+  padding: 0.5em;
+  overflow-wrap: break-word;
+  word-break: break-all;
+`;
+
 const Bottom = styled.div`
-  border-top: 1px solid rgb(235, 238, 240);
   padding-top: 12px;
   padding-bottom: 12px;
   display: flex;
+  gap: 0.5em;
 `;
 
 const Attachment = styled.div`
   display: flex;
   align-items: center;
-  flex: 1;
+  /* flex: 1; */
 `;
 
 const UploadStatus = styled.div`
-  margin-left: 1em;
   overflow-wrap: break-word;
   word-break: break-all;
 `;
-
-const RequireLogin = styled.div`
-  box-sizing: border-box;
+const LoginList = styled.div`
   display: flex;
-  justify-content: center;
   align-items: center;
-  padding: 1em;
-  background-color: rgba(0, 0, 0, 0.1);
-  position: absolute;
-  z-index: 1;
-  left: 0;
-  width: calc(100%);
-  height: calc(100% + 12px);
-  font-size: 1.2em;
-  top: -12px;
-  user-select: none;
-  opacity: 0;
-  :hover {
-    opacity: 1;
-  }
-  transition: opacity 0.2s ease-in-out;
+  justify-content: flex-start;
+  gap: 0.5em;
+  flex: 1;
 `;
 
 interface State {
@@ -341,9 +337,6 @@ const CommentWriteForm: FC<CommentWriteFormProps> = ({
   return (
     <>
       <Form>
-        {!auth.authMethod && (
-          <RequireLogin>로그인하시고 댓글을 등록해 주세요!</RequireLogin>
-        )}
         <ProfilePhotoBox>
           <ProfilePhoto src={image}></ProfilePhoto>
         </ProfilePhotoBox>
@@ -352,17 +345,15 @@ const CommentWriteForm: FC<CommentWriteFormProps> = ({
             <Row>
               <Nick>
                 <Input
-                  contentEditable={!!auth.authMethod}
+                  contentEditable={state.apiStatus !== "PENDING"}
                   placeholder={"닉네임"}
                   ref={nicknameInput}
                 />
               </Nick>
             </Row>
             <ContentDraft onClick={handleFocus}>
-              <Input
-                contentEditable={
-                  !!auth.authMethod && state.apiStatus !== "PENDING"
-                }
+              <ContentInput
+                contentEditable={state.apiStatus !== "PENDING"}
                 placeholder={"댓글 작성"}
                 ref={input}
               />
@@ -370,16 +361,9 @@ const CommentWriteForm: FC<CommentWriteFormProps> = ({
           </RowC>
           <Bottom>
             <Attachment>
-              <CButton
-                label="사진 첨부"
-                color="white"
-                backgroundColor="#ff6600"
-                onClick={() => {
-                  if (fileInput.current) {
-                    console.log(fileInput.current);
-                    fileInput.current.click();
-                  }
-                }}
+              <button
+                className="btn-image"
+                style={{ background: "rgb(15,20,25)" }}
                 disabled={
                   !auth.authMethod ||
                   fileUploadStatus === "PENDING" ||
@@ -387,22 +371,16 @@ const CommentWriteForm: FC<CommentWriteFormProps> = ({
                     ? true
                     : false
                 }
-              />
-              <UploadStatus>
-                {fileUploadStatus === "PENDING" &&
-                  `${attachedImage?.name} 업로드 중...`}
-                {fileUploadStatus === "FULFILLED" &&
-                  `${attachedImage?.name} 업로드 완료!`}
-                {fileUploadStatus === "REJECTED" &&
-                  `${attachedImage?.name} 업로드 실패`}
-              </UploadStatus>
+              >
+                <i className="xi-2x xi-image"></i>
+              </button>
               <input
                 ref={fileInput}
                 type="file"
                 id="input-file"
                 accept="image/*"
                 disabled={!auth.authMethod || fileUploadStatus === "PENDING"}
-                style={{ flex: 1, display: "none" }}
+                style={{ display: "none" }}
                 onChange={(e) => {
                   const files = e.target.files;
                   if (files && files.length > 0) {
@@ -417,6 +395,9 @@ const CommentWriteForm: FC<CommentWriteFormProps> = ({
                 }}
               />
             </Attachment>
+            <LoginList>
+              <TwitterLogin />
+            </LoginList>
             <CButton
               onClick={handleRegister}
               disabled={
@@ -426,6 +407,16 @@ const CommentWriteForm: FC<CommentWriteFormProps> = ({
               }
               label="등록"
             />
+          </Bottom>
+          <Bottom>
+            <UploadStatus>
+              {fileUploadStatus === "PENDING" &&
+                `${attachedImage?.name} 업로드 중...`}
+              {fileUploadStatus === "FULFILLED" &&
+                `${attachedImage?.name} 업로드 완료!`}
+              {fileUploadStatus === "REJECTED" &&
+                `${attachedImage?.name} 업로드 실패`}
+            </UploadStatus>
           </Bottom>
         </RowC>
       </Form>

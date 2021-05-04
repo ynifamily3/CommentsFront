@@ -9,17 +9,14 @@ function TwitterLogin() {
     );
   };
   return (
-    <div style={{ width: 200 }}>
-      <a href="/" onClick={(e) => e.preventDefault()}>
-        <img
-          width="100%"
-          onClick={handleClick}
-          src="/twitter_button.png"
-          title="트위터로 로그인"
-          alt="트위터로 로그인"
-        />
-      </a>
-    </div>
+    <button
+      className="btn-social-login"
+      style={{ background: "#55ACEE" }}
+      onClick={handleClick}
+      title="트위터 로그인"
+    >
+      <i className="xi-2x xi-twitter"></i>
+    </button>
   );
 }
 

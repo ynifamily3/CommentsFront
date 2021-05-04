@@ -93,7 +93,7 @@ const ShowImgButton = styled(Button)`
   background-color: inherit;
   color: rgb(15, 20, 25);
   border: 1px solid rgb(15, 20, 25);
-  border-radius: 8px;
+  border-radius: 3px;
   :hover {
     background-color: rgb(15, 20, 25, 0.1);
   }
