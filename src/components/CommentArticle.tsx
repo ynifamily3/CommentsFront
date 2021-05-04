@@ -1,7 +1,6 @@
 import React, { FC, useState } from "react";
 import styled from "styled-components";
 import { Comment } from "../entity/Comment";
-// import useSendHeight from "../hooks/useSendHeight";
 import Button from "./atom/Button";
 
 interface CommentArticleProps {

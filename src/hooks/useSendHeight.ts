@@ -7,7 +7,7 @@ function useSendHeight(deps: React.DependencyList | undefined) {
     if (!paramsGet) return;
     const origin = window.decodeURIComponent(paramsGet);
     window.parent.postMessage(
-      { height: window.document.body.scrollHeight },
+      { height: window.document.body.scrollHeight + 12 },
       origin
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
