@@ -371,6 +371,12 @@ const CommentWriteForm: FC<CommentWriteFormProps> = ({
                     ? true
                     : false
                 }
+                onClick={() => {
+                  if (fileInput.current) {
+                    console.log(fileInput.current);
+                    fileInput.current.click();
+                  }
+                }}
               >
                 <i className="xi-2x xi-image"></i>
               </button>
