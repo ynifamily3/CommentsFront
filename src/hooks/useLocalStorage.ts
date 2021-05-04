@@ -10,7 +10,6 @@ export function useLocalStorage<T>(
       if (!item) window.localStorage.setItem(key, JSON.stringify(initialValue));
       return item ? JSON.parse(item) : initialValue;
     } catch (error) {
-      console.log(error);
       return initialValue;
     }
   });
@@ -33,9 +32,7 @@ export function useLocalStorage<T>(
           value instanceof Function ? value(storedValue) : value;
         setStoredValue(valueToStore);
         window.localStorage.setItem(key, JSON.stringify(valueToStore));
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     },
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

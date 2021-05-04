@@ -1,6 +1,7 @@
 import React, { FC, useState } from "react";
 import styled from "styled-components";
 import { Comment } from "../entity/Comment";
+import useSendHeight from "../hooks/useSendHeight";
 import Button from "./atom/Button";
 
 interface CommentArticleProps {
@@ -99,17 +100,6 @@ const ShowImgButton = styled(Button)`
   margin-bottom: 1em;
 `;
 
-const handleImageLoaded = () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const paramsGet = urlParams.get("origin");
-  if (!paramsGet) return;
-  const origin = window.decodeURIComponent(paramsGet);
-  window.parent.postMessage(
-    { height: window.document.body.scrollHeight },
-    origin
-  );
-};
-
 const CommentArticle: FC<CommentArticleProps> = (props) => {
   const { comment } = props;
   const [showImg, setShowImg] = useState(false);
@@ -137,6 +127,13 @@ const CommentArticle: FC<CommentArticleProps> = (props) => {
   }
   const handleShowImg = () => {
     setShowImg(true);
+  };
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  useSendHeight([imageLoaded]);
+
+  const handleImageLoaded = () => {
+    setImageLoaded(true);
   };
 
   return (

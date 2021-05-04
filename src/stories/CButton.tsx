@@ -9,7 +9,6 @@ export interface CButtonProps {
 }
 const CButton: React.VFC<CButtonProps> = (props) => {
   const { disabled, onClick, backgroundColor, label, color } = props;
-  console.log(disabled);
   return (
     <button
       disabled={disabled === undefined ? false : disabled}
