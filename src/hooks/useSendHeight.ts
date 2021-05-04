@@ -2,7 +2,6 @@ import { useLayoutEffect } from "react";
 
 function useSendHeight(deps: React.DependencyList | undefined) {
   useLayoutEffect(() => {
-    console.log("recv");
     const urlParams = new URLSearchParams(window.location.search);
     const paramsGet = urlParams.get("origin");
     if (!paramsGet) return;

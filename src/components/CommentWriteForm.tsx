@@ -174,7 +174,6 @@ const postComment = (payload: PostCommentApiPayload) => async (
       },
       { headers }
     );
-    console.log(data);
     const action: WriteCommentSuccessAction = {
       type: WRITE_COMMENT_SUCCESS,
       payload: { token: currentToken },
@@ -373,7 +372,6 @@ const CommentWriteForm: FC<CommentWriteFormProps> = ({
                 }
                 onClick={() => {
                   if (fileInput.current) {
-                    console.log(fileInput.current);
                     fileInput.current.click();
                   }
                 }}
@@ -393,7 +391,6 @@ const CommentWriteForm: FC<CommentWriteFormProps> = ({
                     if (files[0].size < 1000000 * 25) {
                       setFileUploadStatus("PENDING");
                       setAttachedImage(files[0]);
-                      console.log(files[0]);
                     } else {
                       alert("파일 첨부 가능 용량: 25MB 이하입니다.");
                     }
