@@ -19,7 +19,8 @@ import "./atom/Spinner.scss";
 import { ReactComponent as CloseIcon } from "./atom/close.svg";
 import Button from "./atom/Button";
 import useSendHeight from "../hooks/useSendHeight";
-import { CommentListApiPayload, CommentListProps } from "../entity/CommentList";
+import { CommentListApiPayload } from "../entity/CommentList";
+import { BasicProps } from "../entity/UserInfo";
 
 const CList = styled.div``;
 const Divider = styled.div`
@@ -124,8 +125,8 @@ const initialState: State = {
   cancelToken: 0,
 };
 
-const CommentList: FC<CommentListProps> = (props) => {
-  const { consumerID, sequenceID, auth, nickname, profile, userId } = props;
+const CommentList: FC<BasicProps> = (props) => {
+  const { consumerID, sequenceID } = props;
   const [refetch, setRefetch] = useState(false);
   const [state, dispatch] = useReducerWithThunk(reducer, initialState);
   const { skip, limit, comments, apiStatus } = state;
@@ -141,15 +142,7 @@ const CommentList: FC<CommentListProps> = (props) => {
 
   return (
     <>
-      <CommentWriteForm
-        setRefetch={setRefetch}
-        consumerID={consumerID}
-        sequenceID={sequenceID}
-        userId={userId}
-        auth={auth}
-        nickname={nickname}
-        profile={profile}
-      />
+      <CommentWriteForm {...props} setRefetch={setRefetch} />
       <Divider />
       <CList>
         {apiStatus === "PENDING" && (

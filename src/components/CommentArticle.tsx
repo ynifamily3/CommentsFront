@@ -71,7 +71,7 @@ const Content = styled.div`
 `;
 
 const ImgContent = styled.div`
-  border-radius: 16px;
+  border-radius: 3px;
   border-width: 1px;
   border-style: solid;
   border-color: rgb(196, 207, 214);

@@ -12,4 +12,10 @@ export interface UpdateUserInfoAction {
   payload: UserInfo;
 }
 
+export interface BasicProps {
+  state: UserInfo;
+  consumerID: string;
+  sequenceID: string;
+}
+
 export type UAction = UpdateUserInfoAction;

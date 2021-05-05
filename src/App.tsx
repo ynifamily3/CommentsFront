@@ -5,7 +5,7 @@ import CommentList from "./components/CommentList";
 import useSendHeight from "./hooks/useSendHeight";
 import Branding from "./components/Branding";
 import useSocialAuth from "./hooks/useSocialAuth";
-import { UserInfo, UAction } from "./entity/UserInfo";
+import { UserInfo, UAction, BasicProps } from "./entity/UserInfo";
 
 const splitted = window.location.pathname.split("/");
 const isValid =
@@ -30,6 +30,11 @@ function reducer(state: UserInfo, action: UAction): UserInfo {
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { auth, userId, nickname, profile } = state;
+  const combined: BasicProps = {
+    state,
+    consumerID: splitted[1],
+    sequenceID: splitted[2],
+  };
 
   useSocialAuth(dispatch);
 
@@ -39,17 +44,7 @@ function App() {
   return (
     <>
       <GlobalStyle />
-      {!isValid && <Branding />}
-      {isValid && (
-        <CommentList
-          consumerID={splitted[1]}
-          sequenceID={splitted[2]}
-          userId={userId}
-          auth={auth}
-          nickname={nickname}
-          profile={profile}
-        />
-      )}
+      {!isValid ? <Branding /> : <CommentList {...combined} />}
     </>
   );
 }

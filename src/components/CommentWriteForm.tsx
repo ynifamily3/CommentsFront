@@ -12,7 +12,8 @@ import {
 } from "../action/CommentAction";
 import { ApiResult, ApiResultWithCount } from "../entity/ApiResult";
 import { Comment } from "../entity/Comment";
-import { CommentListProps } from "../entity/CommentList";
+import { PostCommentApiPayload } from "../entity/CommentList";
+import { BasicProps } from "../entity/UserInfo";
 import { useReducerWithThunk } from "../hooks/useReducerWithThunk";
 import { CButton } from "../stories/CButton";
 import TwitterLogin from "./TwitterLogin";
@@ -103,7 +104,6 @@ const Bottom = styled.div`
 const Attachment = styled.div`
   display: flex;
   align-items: center;
-  /* flex: 1; */
 `;
 
 const UploadStatus = styled.div`
@@ -127,23 +127,15 @@ interface State {
 }
 type Reducer<T, P> = (state: T, action: P) => T;
 
-type PostCommentApiPayload = CommentListProps & {
-  image: string | null;
-  content: string;
-};
-
 const postComment = (payload: PostCommentApiPayload) => async (
   dispatch: Dispatch<CommentActionTypes>
 ) => {
   const {
     consumerID,
     sequenceID,
-    nickname,
     image,
     content,
-    auth,
-    userId,
-    profile,
+    state: { auth, nickname, profile, userId },
   } = payload;
   const currentToken = Math.random();
   dispatch({
@@ -229,18 +221,15 @@ const initialState: State = {
   content: "",
 };
 
-type CommentWriteFormProps = CommentListProps & {
+type CommentWriteFormProps = BasicProps & {
   setRefetch: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const CommentWriteForm: FC<CommentWriteFormProps> = ({
   consumerID,
   sequenceID,
+  state: { auth, nickname: fNick, profile: fProf, userId },
   setRefetch,
-  auth,
-  userId,
-  nickname: fNick,
-  profile: fProf,
 }) => {
   const [, setNickname] = useState(fNick);
   const [image, setImage] = useState(fProf);
@@ -304,12 +293,9 @@ const CommentWriteForm: FC<CommentWriteFormProps> = ({
       const actionCreat = postComment({
         consumerID,
         sequenceID,
-        nickname,
+        state: { auth, nickname, profile: image, userId },
         image: s3URL,
         content,
-        auth,
-        userId,
-        profile: image,
       });
       dispatch(actionCreat);
     }

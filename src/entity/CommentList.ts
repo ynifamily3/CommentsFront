@@ -1,13 +1,4 @@
-import { AuthState } from "./AuthType";
-
-export interface CommentListProps {
-  consumerID: string;
-  sequenceID: string;
-  userId: string;
-  auth: AuthState;
-  nickname: string;
-  profile: string;
-}
+import { BasicProps } from "./UserInfo";
 
 export interface CommentListApiPayload {
   consumerID: string;
@@ -15,3 +6,8 @@ export interface CommentListApiPayload {
   skip: number;
   limit: number;
 }
+
+export type PostCommentApiPayload = BasicProps & {
+  image: string | null;
+  content: string;
+};
