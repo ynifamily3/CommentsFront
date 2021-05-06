@@ -126,7 +126,11 @@ const initialState: State = {
 };
 
 const CommentList: FC<BasicProps> = (props) => {
-  const { consumerID, sequenceID } = props;
+  const {
+    consumerID,
+    sequenceID,
+    state: { auth },
+  } = props;
   const [refetch, setRefetch] = useState(false);
   const [state, dispatch] = useReducerWithThunk(reducer, initialState);
   const { skip, limit, comments, apiStatus } = state;
@@ -180,7 +184,9 @@ const CommentList: FC<BasicProps> = (props) => {
           </Loading>
         )}
         {comments.map((comment) => {
-          return <CommentArticle key={comment.id} comment={comment} />;
+          return (
+            <CommentArticle key={comment.id} comment={comment} auth={auth} />
+          );
         })}
       </CList>
     </>

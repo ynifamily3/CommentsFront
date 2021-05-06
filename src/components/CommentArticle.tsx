@@ -1,11 +1,14 @@
+import axios from "axios";
 import React, { FC, useState } from "react";
 import styled from "styled-components";
+import { AuthState } from "../entity/AuthType";
 import { Comment } from "../entity/Comment";
 import useSendHeight from "../hooks/useSendHeight";
 import Button from "./atom/Button";
 
 interface CommentArticleProps {
   comment: Comment;
+  auth: AuthState;
 }
 const Article = styled.article`
   display: flex;
@@ -101,7 +104,7 @@ const ShowImgButton = styled(Button)`
 `;
 
 const CommentArticle: FC<CommentArticleProps> = (props) => {
-  const { comment } = props;
+  const { comment, auth } = props;
   const [showImg, setShowImg] = useState(false);
   const currentDate = new Date();
   const registeredDate = new Date(comment.date);
@@ -136,6 +139,18 @@ const CommentArticle: FC<CommentArticleProps> = (props) => {
     setImageLoaded(true);
   };
 
+  const handleDelete = () => {
+    let headers: Record<string, string> = {};
+    if (auth.authMethod === "twitter") {
+      const twitterAuthValue = auth.authValue;
+      headers["Authorization"] = twitterAuthValue.authorization;
+    }
+    axios.delete(
+      `/comment/${comment.consumerID}/${comment.sequenceID}/${comment.id}?authType=${auth.authMethod}`,
+      { headers }
+    );
+  };
+
   return (
     <Article>
       <ProfilePhotoBox>
@@ -163,6 +178,9 @@ const CommentArticle: FC<CommentArticleProps> = (props) => {
             )}
           </>
         )}
+      </RowC>
+      <RowC>
+        <button onClick={handleDelete}>삭제하기</button>
       </RowC>
     </Article>
   );
