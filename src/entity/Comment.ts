@@ -18,3 +18,4 @@ export interface Comment {
   content: CommentContent;
   writer: CommentWriter;
 }
+export type ArticleState = "registering" | "deleting" | "done";

@@ -185,7 +185,12 @@ const CommentList: FC<BasicProps> = (props) => {
         )}
         {comments.map((comment) => {
           return (
-            <CommentArticle key={comment.id} comment={comment} auth={auth} />
+            <CommentArticle
+              key={comment.id}
+              comment={comment}
+              auth={auth}
+              state={"done"}
+            />
           );
         })}
       </CList>

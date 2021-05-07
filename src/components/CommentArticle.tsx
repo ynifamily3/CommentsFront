@@ -2,15 +2,17 @@ import axios from "axios";
 import React, { FC, useState } from "react";
 import styled from "styled-components";
 import { AuthState } from "../entity/AuthType";
-import { Comment } from "../entity/Comment";
+import { Comment, ArticleState } from "../entity/Comment";
 import useSendHeight from "../hooks/useSendHeight";
+import { CButton } from "../stories/CButton";
 import Button from "./atom/Button";
 
 interface CommentArticleProps {
   comment: Comment;
   auth: AuthState;
+  state: ArticleState;
 }
-const Article = styled.article`
+const Article = styled.article<{ articleState: ArticleState }>`
   display: flex;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
     Arial, sans-serif;
@@ -18,6 +20,8 @@ const Article = styled.article`
   padding-top: 12px;
   padding-left: 12px;
   padding-right: 12px;
+  padding-bottom: 12px;
+  opacity: ${(props) => (props.articleState !== "done" ? 0.5 : 1)};
 `;
 
 const ProfilePhotoBox = styled.div``;
@@ -104,7 +108,8 @@ const ShowImgButton = styled(Button)`
 `;
 
 const CommentArticle: FC<CommentArticleProps> = (props) => {
-  const { comment, auth } = props;
+  const { comment, auth, state } = props;
+  const [articleState, setArticleState] = useState(state);
   const [showImg, setShowImg] = useState(false);
   const currentDate = new Date();
   const registeredDate = new Date(comment.date);
@@ -138,51 +143,75 @@ const CommentArticle: FC<CommentArticleProps> = (props) => {
   const handleImageLoaded = () => {
     setImageLoaded(true);
   };
-
+  const [deleted, setDeleted] = useState(false);
   const handleDelete = () => {
+    if (!window.confirm("정말로 삭제하시겠어요?")) return;
+    setArticleState("deleting");
     let headers: Record<string, string> = {};
     if (auth.authMethod === "twitter") {
       const twitterAuthValue = auth.authValue;
       headers["Authorization"] = twitterAuthValue.authorization;
     }
-    axios.delete(
-      `/comment/${comment.consumerID}/${comment.sequenceID}/${comment.id}?authType=${auth.authMethod}`,
-      { headers }
-    );
+    axios
+      .delete(
+        `/comment/${comment.consumerID}/${comment.sequenceID}/${comment.id}?authType=${auth.authMethod}`,
+        { headers }
+      )
+      .then((d) => {
+        setDeleted(true);
+      })
+      .catch((x) => {
+        console.log("err", x);
+        alert("삭제에 실패하였습니다.");
+        setArticleState("done");
+      });
   };
 
   return (
-    <Article>
-      <ProfilePhotoBox>
-        <ProfilePhoto src={comment.writer.profilePhoto}></ProfilePhoto>
-      </ProfilePhotoBox>
-      <RowC>
-        <Row>
-          <Nick>{comment.writer.nickname}</Nick>
-          <NickSide>{diffString}</NickSide>
-        </Row>
-        <Content>{comment.content.textData}</Content>
-        {comment.content.imageData && (
-          <>
-            {!showImg && (
-              <ShowImgButton onClick={handleShowImg}>이미지 보기</ShowImgButton>
+    <>
+      {!deleted && (
+        <Article articleState={articleState}>
+          <ProfilePhotoBox>
+            <ProfilePhoto src={comment.writer.profilePhoto}></ProfilePhoto>
+          </ProfilePhotoBox>
+          <RowC>
+            <Row>
+              <Nick>{comment.writer.nickname}</Nick>
+              <NickSide>{diffString}</NickSide>
+            </Row>
+            <Content>{comment.content.textData}</Content>
+            {comment.content.imageData && (
+              <>
+                {!showImg && (
+                  <ShowImgButton onClick={handleShowImg}>
+                    이미지 보기
+                  </ShowImgButton>
+                )}
+                {showImg && (
+                  <ImgContent>
+                    <img
+                      src={comment.content.imageData}
+                      alt="이미지"
+                      onLoad={handleImageLoaded}
+                    />
+                  </ImgContent>
+                )}
+              </>
             )}
-            {showImg && (
-              <ImgContent>
-                <img
-                  src={comment.content.imageData}
-                  alt="이미지"
-                  onLoad={handleImageLoaded}
+          </RowC>
+          <Row style={{ width: 150 }}>
+            {articleState === "done" &&
+              auth.authMethod + "-" + auth.authValue === comment.writer.id && (
+                <CButton
+                  onClick={handleDelete}
+                  label="삭제"
+                  backgroundColor={"#ffead1"}
                 />
-              </ImgContent>
-            )}
-          </>
-        )}
-      </RowC>
-      <RowC>
-        <button onClick={handleDelete}>삭제하기</button>
-      </RowC>
-    </Article>
+              )}
+          </Row>
+        </Article>
+      )}
+    </>
   );
 };
 
