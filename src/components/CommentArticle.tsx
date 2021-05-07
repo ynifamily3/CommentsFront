@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import { AuthState } from "../entity/AuthType";
 import { Comment, ArticleState } from "../entity/Comment";
@@ -201,7 +201,8 @@ const CommentArticle: FC<CommentArticleProps> = (props) => {
           </RowC>
           <Row style={{ width: 150 }}>
             {articleState === "done" &&
-              auth.authMethod + "-" + auth.authValue === comment.writer.id && (
+              auth.authMethod + "-" + auth.authValue?.id ===
+                comment.writer.id && (
                 <CButton
                   onClick={handleDelete}
                   label="삭제"
