@@ -42,9 +42,9 @@ const Nick = styled.div`
   line-height: 20px;
   color: #0f1419;
   width: 100%;
-  cursor: text;
-  border: 1px solid rgba(15, 20, 25, 0.25);
-  border-radius: 3px;
+  /* cursor: text; */
+  /* border: 1px solid rgba(15, 20, 25, 0.25); */
+  /* border-radius: 3px; */
   margin-bottom: 0.5em;
   width: 100%;
   max-width: 600px;
@@ -330,7 +330,7 @@ const CommentWriteForm: FC<CommentWriteFormProps> = ({
             <Row>
               <Nick>
                 <Input
-                  contentEditable={state.apiStatus !== "PENDING"}
+                  contentEditable={false}
                   placeholder={"닉네임"}
                   ref={nicknameInput}
                 />

@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useState } from "react";
 import styled from "styled-components";
 import { AuthState } from "../entity/AuthType";
 import { Comment, ArticleState } from "../entity/Comment";
@@ -22,6 +22,11 @@ const Article = styled.article<{ articleState: ArticleState }>`
   padding-right: 12px;
   padding-bottom: 12px;
   opacity: ${(props) => (props.articleState !== "done" ? 0.5 : 1)};
+  transition: 0.3s;
+  :hover {
+    background-color: rgb(245, 245, 245);
+    cursor: pointer;
+  }
 `;
 
 const ProfilePhotoBox = styled.div``;
@@ -199,7 +204,7 @@ const CommentArticle: FC<CommentArticleProps> = (props) => {
               </>
             )}
           </RowC>
-          <Row style={{ width: 150 }}>
+          <Row style={{ width: 150, justifyContent: "flex-end" }}>
             {articleState === "done" &&
               auth.authMethod + "-" + auth.authValue?.id ===
                 comment.writer.id && (
