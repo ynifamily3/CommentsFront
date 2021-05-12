@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { AuthState, ITwitter } from "../entity/AuthType";
 import { UpdateUserInfoAction } from "../entity/UserInfo";
-import { useLocalStorage } from "./useLocalStorage";
+import { useSavedAuth } from "./useSavedAuth";
 
 function applyLogin(
   authState: AuthState,
@@ -33,25 +33,18 @@ function applyLogin(
 }
 
 function useSocialAuth(dispatch: React.Dispatch<UpdateUserInfoAction>) {
-  // const [savedAuth, setSavedAuth] = useLocalStorage<AuthState>(
-  //   "roco-moe-comments-auth",
-  //   {
-  //     authMethod: null,
-  //     authValue: null,
-  //   }
-  // );
+  const { auth, status } = useSavedAuth();
+  useEffect(() => {
+    console.log("**", auth, status, "갱신");
+  }, [auth, status]);
 
-  // 로컬스토리지에 인증 관련 정보가 있는 경우 이것을 사용함.
-  // if (savedAuth && savedAuth.authMethod && savedAuth.authValue) {
-  //   applyLogin(savedAuth, dispatch);
-  // }
-  // 소셜 로그인 수행 후 팝업이 메시지를 보냄
   useEffect(() => {
     function receiveMessage(event: MessageEvent<AuthState>) {
       // 허용 리스트
       const allowedOrigin = [
         "http://localhost:3000",
         "http://localhost:8081",
+        "http://roco.moe",
         "https://auth.roco.moe",
       ];
       if (!allowedOrigin.includes(event.origin)) {

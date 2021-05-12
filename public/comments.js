@@ -1,10 +1,59 @@
 (function () {
   const target = document.getElementById("comments-service-roco");
+  function getSaved3rdAuth() {
+    try {
+      return JSON.parse(
+        window.localStorage.getItem("comments-service-roco-auth")
+      );
+    } catch (e) {
+      console.log("comments-service:", e);
+      window.localStorage.removeItem("comments-service-roco-auth");
+      return null;
+    }
+  }
+
+  function persist3rdAuth(auth) {
+    try {
+      return JSON.parse(
+        window.localStorage.setItem(
+          "comments-service-roco-auth",
+          JSON.stringify(auth)
+        )
+      );
+    } catch (e) {
+      console.log("comments-service:", e);
+      window.localStorage.removeItem("comments-service-roco-auth");
+      return null;
+    }
+  }
+
   function hnd({ data, origin, source }) {
-    if (origin !== "https://roco.moe") return;
+    const allowedOrigin = [
+      "http://localhost:3000",
+      "http://localhost:8081",
+      "http://roco.moe",
+      "https://auth.roco.moe",
+    ];
+    if (!allowedOrigin.includes(origin)) {
+      return;
+    }
     const iframe = document.getElementById("comments-service-roco-iframe");
+    // 높이 조정 명령
     if ("height" in data) {
       iframe.style.height = `${data.height}px`;
+    }
+    // persist 3rd auth state 명령
+    if ("auth" in data) {
+      console.log("persist 3rd auth state 명령");
+      persist3rdAuth(data.auth);
+    }
+    // request 3rd auth state 명령
+    if ("requestAuth" in data && data.requestAuth === true) {
+      console.log("request 3rd auth state 명령", "전송해 줍니다.");
+      source.postMessage(
+        { type: "persistedAuth", payload: getSaved3rdAuth() },
+        origin
+      );
     }
   }
   window.addEventListener("message", hnd, false);
