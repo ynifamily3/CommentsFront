@@ -1,4 +1,5 @@
 (function () {
+  console.log("안녕하세요 !");
   const target = document.getElementById("comments-service-roco");
   function getSaved3rdAuth() {
     try {
@@ -28,10 +29,11 @@
   }
 
   function hnd({ data, origin, source }) {
+    console.log("클라이언트(3rd)가 메시지를 수신받음.", data, origin);
     const allowedOrigin = [
       "http://localhost:3000",
       "http://localhost:8081",
-      "http://roco.moe",
+      "https://roco.moe",
       "https://auth.roco.moe",
     ];
     if (!allowedOrigin.includes(origin)) {
@@ -40,6 +42,7 @@
     const iframe = document.getElementById("comments-service-roco-iframe");
     // 높이 조정 명령
     if ("height" in data) {
+      console.log("높이 조정 명령");
       iframe.style.height = `${data.height}px`;
     }
     // persist 3rd auth state 명령

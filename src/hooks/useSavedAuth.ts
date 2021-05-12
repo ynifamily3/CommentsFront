@@ -64,6 +64,7 @@ function useSavedAuth() {
       window.removeEventListener("message", receiveMessage);
     };
   }, [status]);
+  // TODO 로그인 성공 시 jwt토큰을 3rd service에 전달해 주는 로직 구현하기
   return { status, auth };
 }
 
