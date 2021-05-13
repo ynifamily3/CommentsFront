@@ -72,13 +72,12 @@ export function useReducerWithThunk<R extends Reducer<any, any>>(
 # 의존 그래프
 
 - https://github.com/pahen/madge
-- 순환 의존성은 되도록 해결할 예정
 
 ```bash
  madge ./src/index.tsx -i ~/Pictures/test.png
 ```
 
-![의존 그래프](https://user-images.githubusercontent.com/13795765/114711454-ed1a9000-9d69-11eb-901c-bf6301d8bd58.png)
+![의존 그래프](https://user-images.githubusercontent.com/13795765/118137940-bb681800-b440-11eb-9463-418b8158c1c0.png)
 
 # 리소스
 
