@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { AuthState, ITwitter } from "../entity/AuthType";
 import { UpdateUserInfoAction } from "../entity/UserInfo";
+import { sendMessageTo3rdService } from "../util/postMessage";
 import { useSavedAuth } from "./useSavedAuth";
 
 function applyLogin(
@@ -34,9 +35,13 @@ function applyLogin(
 
 function useSocialAuth(dispatch: React.Dispatch<UpdateUserInfoAction>) {
   const { auth, status } = useSavedAuth();
+
   useEffect(() => {
-    console.log("**", auth, status, "갱신");
-  }, [auth, status]);
+    if (status === "RESOLVED") {
+      console.log("&&&", auth, status, dispatch);
+      if (auth && auth.authMethod && auth.authValue) applyLogin(auth, dispatch);
+    }
+  }, [auth, status, dispatch]);
 
   useEffect(() => {
     function receiveMessage(event: MessageEvent<AuthState>) {
@@ -53,8 +58,20 @@ function useSocialAuth(dispatch: React.Dispatch<UpdateUserInfoAction>) {
       (event.source as Window).close();
       // 로그인 처리
       applyLogin(event.data, dispatch);
-      // 로컬스토리지에 저장
-      // setSavedAuth(event.data);
+      // 로컬스토리지에 저장 (3rd cookie 비활성된 경우 catch문에 걸립니다.)
+      try {
+        window.localStorage.setItem(
+          "comments-service-roco-auth",
+          JSON.stringify(event.data)
+        );
+      } catch (e) {
+        console.log("3rd 쿠키 차단됨 (fallback):", e);
+      } finally {
+        // 3rd 로컬스토리지에 저장 (명령 내리기)
+        sendMessageTo3rdService({
+          auth: event.data,
+        });
+      }
     }
 
     window.addEventListener("message", receiveMessage, false);

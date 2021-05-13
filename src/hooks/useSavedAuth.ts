@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { AuthState } from "../entity/AuthType";
+import { getOrigin } from "../util/getOrigin";
 import { sendMessageTo3rdService } from "../util/postMessage";
 
+// 자사 혹은 타사에 저장된 token을 통신으로 받아'온다.'
 function useSavedAuth() {
   const [status, setStatus] = useState<
     "IDLE" | "PENDING" | "RESOLVED" | "REJECTED"
@@ -42,21 +44,15 @@ function useSavedAuth() {
       if (status === "IDLE") {
         return;
       }
-      // 허용 리스트
-      const allowedOrigin = [
-        "http://localhost:3000",
-        "http://localhost:8081",
-        "http://roco.moe",
-        "https://auth.roco.moe",
-      ];
-      if (!allowedOrigin.includes(event.origin)) {
+      if (event.origin !== getOrigin()) {
         return;
       }
       if (event.data.type === "persistedAuth") {
         // 성공적으로 전달받음.
-        console.log("성공적으로 전달받음.");
         setStatus("RESOLVED");
-        setAuth(event.data.payload);
+        // 3rd서비스의 auth값이 있을 때만 적용하기로 합니다.
+        console.log("using 3rd token");
+        if (event.data.payload) setAuth(event.data.payload);
       }
     }
     window.addEventListener("message", receiveMessage, false);
@@ -64,7 +60,7 @@ function useSavedAuth() {
       window.removeEventListener("message", receiveMessage);
     };
   }, [status]);
-  // TODO 로그인 성공 시 jwt토큰을 3rd service에 전달해 주는 로직 구현하기
+
   return { status, auth };
 }
 
