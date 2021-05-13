@@ -38,7 +38,6 @@ function useSocialAuth(dispatch: React.Dispatch<UpdateUserInfoAction>) {
 
   useEffect(() => {
     if (status === "RESOLVED") {
-      console.log("&&&", auth, status, dispatch);
       if (auth && auth.authMethod && auth.authValue) applyLogin(auth, dispatch);
     }
   }, [auth, status, dispatch]);
@@ -65,7 +64,6 @@ function useSocialAuth(dispatch: React.Dispatch<UpdateUserInfoAction>) {
           JSON.stringify(event.data)
         );
       } catch (e) {
-        console.log("3rd 쿠키 차단됨 (fallback):", e);
       } finally {
         // 3rd 로컬스토리지에 저장 (명령 내리기)
         sendMessageTo3rdService({

@@ -51,7 +51,6 @@ function useSavedAuth() {
         // 성공적으로 전달받음.
         setStatus("RESOLVED");
         // 3rd서비스의 auth값이 있을 때만 적용하기로 합니다.
-        console.log("using 3rd token");
         if (event.data.payload) setAuth(event.data.payload);
       }
     }
