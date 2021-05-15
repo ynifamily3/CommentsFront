@@ -17,6 +17,7 @@ import { BasicProps } from "../entity/UserInfo";
 import { useReducerWithThunk } from "../hooks/useReducerWithThunk";
 import { CButton } from "../stories/CButton";
 import TwitterLogin from "./TwitterLogin";
+import KakaoLogin from "./KakaoLogin";
 
 const Form = styled.div`
   position: relative;
@@ -144,9 +145,9 @@ const postComment = (payload: PostCommentApiPayload) => async (
   });
   try {
     let headers: Record<string, string> = {};
-    if (auth.authMethod === "twitter") {
-      const twitterAuthValue = auth.authValue;
-      headers["Authorization"] = twitterAuthValue.authorization;
+    if (auth.authMethod !== null) {
+      const authValue = auth.authValue;
+      headers["Authorization"] = authValue.authorization;
     }
     const { data } = await axios.post<ApiResultWithCount<Comment[]>>(
       `/comment/${consumerID}/${sequenceID}?skip=${0}&limit=${1}&authType=${
@@ -386,6 +387,7 @@ const CommentWriteForm: FC<CommentWriteFormProps> = ({
             </Attachment>
             <LoginList>
               <TwitterLogin />
+              <KakaoLogin />
             </LoginList>
             <CButton
               onClick={handleRegister}

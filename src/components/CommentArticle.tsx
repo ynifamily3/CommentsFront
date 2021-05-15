@@ -153,9 +153,9 @@ const CommentArticle: FC<CommentArticleProps> = (props) => {
     if (!window.confirm("정말로 삭제하시겠어요?")) return;
     setArticleState("deleting");
     let headers: Record<string, string> = {};
-    if (auth.authMethod === "twitter") {
-      const twitterAuthValue = auth.authValue;
-      headers["Authorization"] = twitterAuthValue.authorization;
+    if (auth.authMethod !== null) {
+      const authValue = auth.authValue;
+      headers["Authorization"] = authValue.authorization;
     }
     axios
       .delete(

@@ -32,6 +32,9 @@ const GlobalStyle = createGlobalStyle`
 .btn-social-login:hover {
   box-shadow: 0 0 0 .2rem rgba(0, 123, 255, .25);
 }
+.btn-social-login.kakao:hover {
+  box-shadow: 0 0 0 .2rem rgba(254, 229, 0, .25);
+}
 .text-dark { color: #343a40!important; }
 `;
 
