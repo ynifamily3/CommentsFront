@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { AuthState, ITwitter } from "../entity/AuthType";
+import { AuthState, ITwitter, IKakao } from "../entity/AuthType";
 import { UpdateUserInfoAction } from "../entity/UserInfo";
 import { sendMessageTo3rdService } from "../util/postMessage";
 import { useSavedAuth } from "./useSavedAuth";
@@ -13,19 +13,43 @@ function applyLogin(
   if (authMethod) {
     switch (authMethod) {
       case "twitter":
-        const { displayName, id, photo, authorization } = authValue as ITwitter;
-        dispatch({
-          type: "UPDATE_USER_INFO",
-          payload: {
-            auth: {
-              authMethod: "twitter",
-              authValue: { displayName, id, photo, authorization },
+        {
+          const {
+            displayName,
+            id,
+            photo,
+            authorization,
+          } = authValue as ITwitter;
+          dispatch({
+            type: "UPDATE_USER_INFO",
+            payload: {
+              auth: {
+                authMethod: "twitter",
+                authValue: { displayName, id, photo, authorization },
+              },
+              userId: id,
+              nickname: displayName ?? "",
+              profile: photo ?? "https://via.placeholder.com/150",
             },
-            userId: id,
-            nickname: displayName ?? "",
-            profile: photo ?? "https://via.placeholder.com/150",
-          },
-        });
+          });
+        }
+        break;
+      case "kakao":
+        {
+          const { displayName, id, photo, authorization } = authValue as IKakao;
+          dispatch({
+            type: "UPDATE_USER_INFO",
+            payload: {
+              auth: {
+                authMethod: "kakao",
+                authValue: { displayName, id, photo, authorization },
+              },
+              userId: id,
+              nickname: displayName ?? "",
+              profile: photo ?? "https://via.placeholder.com/150",
+            },
+          });
+        }
         break;
       default:
         break;
