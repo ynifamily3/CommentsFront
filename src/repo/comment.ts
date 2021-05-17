@@ -1,21 +1,11 @@
 import axios, { CancelToken } from "axios";
 import { ApiResult, ApiResultWithCount } from "../entity/ApiResult";
-
-function handleCatch(thrown: any) {
-  if (axios.isCancel(thrown)) {
-    console.warn("Request canceled", thrown.message);
-  } else {
-    console.error(thrown.message);
-  }
-  return null;
-}
-
-export interface GetCommentsPayload {
-  consumerID: string;
-  sequenceID: string;
-  skip: number;
-  limit: number;
-}
+import {
+  DeleteCommentPayload,
+  GetCommentsPayload,
+  PostCommentPayload,
+} from "../entity/repo/comment";
+import { handleAxiosExceptionCatch } from "./_axios";
 
 export async function getComments(
   payload: GetCommentsPayload,
@@ -29,17 +19,8 @@ export async function getComments(
     );
     return data;
   } catch (thrown) {
-    return handleCatch(thrown);
+    return handleAxiosExceptionCatch(thrown);
   }
-}
-
-export interface PostCommentPayload {
-  authMethod: string;
-  authorization: string;
-  consumerID: string;
-  sequenceID: string;
-  image: string | null;
-  content: string;
 }
 
 export async function postComment(
@@ -56,15 +37,35 @@ export async function postComment(
       content,
     } = payload;
     const { data } = await axios.post<ApiResult<boolean>>(
-      `/comment/${consumerID}/${sequenceID}/v2?authType=${authMethod}`,
+      `/comment/${consumerID}/${sequenceID}/v2`,
       {
+        authMethod,
         textData: content,
         imageData: image,
       },
-      { headers: { Authorization: authorization } }
+      { headers: { Authorization: authorization }, cancelToken }
     );
     return data;
   } catch (thrown) {
-    return handleCatch(thrown);
+    return handleAxiosExceptionCatch(thrown);
+  }
+}
+
+export async function deleteComment(
+  payload: DeleteCommentPayload,
+  cancelToken: CancelToken
+) {
+  try {
+    const { authMethod, authorization, id } = payload;
+    const { data } = await axios.delete<ApiResult<boolean>>(
+      `/comment/${id}?authMethod=${authMethod}`,
+      {
+        headers: { Authorization: authorization },
+        cancelToken,
+      }
+    );
+    return data;
+  } catch (thrown) {
+    return handleAxiosExceptionCatch(thrown);
   }
 }
