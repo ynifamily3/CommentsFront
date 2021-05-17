@@ -1,11 +1,4 @@
-export interface ITwitter {
-  id: string;
-  displayName: string | null;
-  photo: string | null;
-  authorization: string;
-}
-
-export interface IKakao {
+export interface IAuth {
   id: string;
   displayName: string | null;
   photo: string | null;
@@ -14,5 +7,5 @@ export interface IKakao {
 
 export type AuthState =
   | { authMethod: null; authValue: null }
-  | { authMethod: "twitter"; authValue: ITwitter }
-  | { authMethod: "kakao"; authValue: IKakao };
+  | { authMethod: "twitter"; authValue: IAuth }
+  | { authMethod: "kakao"; authValue: IAuth };

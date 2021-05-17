@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { AuthState, ITwitter, IKakao } from "../entity/AuthType";
+import { AuthState, IAuth } from "../entity/AuthType";
 import { UpdateUserInfoAction } from "../entity/UserInfo";
 import { sendMessageTo3rdService } from "../util/postMessage";
 import { useSavedAuth } from "./useSavedAuth";
@@ -11,49 +11,19 @@ function applyLogin(
   // 닉네임, 프로필사진 설정
   const { authMethod, authValue } = authState;
   if (authMethod) {
-    switch (authMethod) {
-      case "twitter":
-        {
-          const {
-            displayName,
-            id,
-            photo,
-            authorization,
-          } = authValue as ITwitter;
-          dispatch({
-            type: "UPDATE_USER_INFO",
-            payload: {
-              auth: {
-                authMethod: "twitter",
-                authValue: { displayName, id, photo, authorization },
-              },
-              userId: id,
-              nickname: displayName ?? "",
-              profile: photo ?? "https://via.placeholder.com/150",
-            },
-          });
-        }
-        break;
-      case "kakao":
-        {
-          const { displayName, id, photo, authorization } = authValue as IKakao;
-          dispatch({
-            type: "UPDATE_USER_INFO",
-            payload: {
-              auth: {
-                authMethod: "kakao",
-                authValue: { displayName, id, photo, authorization },
-              },
-              userId: id,
-              nickname: displayName ?? "",
-              profile: photo ?? "https://via.placeholder.com/150",
-            },
-          });
-        }
-        break;
-      default:
-        break;
-    }
+    const { displayName, id, photo, authorization } = authValue as IAuth;
+    dispatch({
+      type: "UPDATE_USER_INFO",
+      payload: {
+        auth: {
+          authMethod,
+          authValue: { displayName, id, photo, authorization },
+        },
+        userId: id,
+        nickname: displayName ?? "(이름없음)",
+        profile: photo ?? "https://roco.moe/no-profile.png",
+      },
+    });
   }
 }
 
