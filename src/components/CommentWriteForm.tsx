@@ -1,23 +1,11 @@
-import axios from "axios";
-import produce from "immer";
-import React, { Dispatch, FC, useEffect, useRef, useState } from "react";
+import React, { FC, useEffect, useRef } from "react";
 import styled from "styled-components";
-import {
-  CommentActionTypes,
-  WriteCommentFailureAction,
-  WriteCommentSuccessAction,
-  WRITE_COMMENT,
-  WRITE_COMMENT_FAILURE,
-  WRITE_COMMENT_SUCCESS,
-} from "../action/CommentAction";
-import { ApiResult, ApiResultWithCount } from "../entity/ApiResult";
-import { Comment } from "../entity/Comment";
-import { PostCommentApiPayload } from "../entity/CommentList";
 import { BasicProps } from "../entity/UserInfo";
-import { useReducerWithThunk } from "../hooks/useReducerWithThunk";
 import { CButton } from "../stories/CButton";
 import TwitterLogin from "./TwitterLogin";
 import KakaoLogin from "./KakaoLogin";
+import { postComment } from "../repo/comment";
+import { useApi } from "../hooks/useApi";
 
 const Form = styled.div`
   position: relative;
@@ -43,9 +31,6 @@ const Nick = styled.div`
   line-height: 20px;
   color: #0f1419;
   width: 100%;
-  /* cursor: text; */
-  /* border: 1px solid rgba(15, 20, 25, 0.25); */
-  /* border-radius: 3px; */
   margin-bottom: 0.5em;
   width: 100%;
   max-width: 600px;
@@ -119,109 +104,6 @@ const LoginList = styled.div`
   flex: 1;
 `;
 
-interface State {
-  apiStatus: "IDLE" | "PENDING" | "FULFILLED" | "REJECTED";
-  cancelToken: number; // cancel Token
-  nickname: string;
-  image: string;
-  content: string;
-}
-type Reducer<T, P> = (state: T, action: P) => T;
-
-const postComment = (payload: PostCommentApiPayload) => async (
-  dispatch: Dispatch<CommentActionTypes>
-) => {
-  const {
-    consumerID,
-    sequenceID,
-    image,
-    content,
-    state: { auth, nickname, profile, userId },
-  } = payload;
-  const currentToken = Math.random();
-  dispatch({
-    type: WRITE_COMMENT,
-    payload: { token: currentToken },
-  });
-  try {
-    let headers: Record<string, string> = {};
-    if (auth.authMethod !== null) {
-      const authValue = auth.authValue;
-      headers["Authorization"] = authValue.authorization;
-    }
-    const { data } = await axios.post<ApiResultWithCount<Comment[]>>(
-      `/comment/${consumerID}/${sequenceID}?skip=${0}&limit=${1}&authType=${
-        auth.authMethod
-      }`,
-      {
-        date: new Date().toISOString(),
-        writer: {
-          id: `${auth.authMethod}-${userId}`,
-          nickname,
-          profilePhoto: profile,
-        },
-        content: {
-          textData: content,
-          imageData: image,
-        },
-      },
-      { headers }
-    );
-    const action: WriteCommentSuccessAction = {
-      type: WRITE_COMMENT_SUCCESS,
-      payload: { token: currentToken },
-    };
-    const failAction: WriteCommentFailureAction = {
-      type: WRITE_COMMENT_FAILURE,
-      payload: { token: currentToken, data: "댓글 등록 실패" },
-    };
-    if (data.status === "FAILURE") {
-      dispatch(failAction);
-    } else {
-      dispatch(action);
-    }
-  } catch (e) {
-    dispatch({
-      type: WRITE_COMMENT_FAILURE,
-      payload: { data: e, token: currentToken },
-    });
-  }
-};
-
-const reducer: Reducer<State, CommentActionTypes> = (state, action) => {
-  switch (action.type) {
-    case WRITE_COMMENT:
-      return produce(state, (draft) => {
-        draft.apiStatus = "PENDING";
-        draft.cancelToken = action.payload.token;
-      });
-    case WRITE_COMMENT_SUCCESS:
-      if (state.cancelToken !== action.payload.token) {
-        return state;
-      }
-      return produce(state, (draft) => {
-        draft.apiStatus = "FULFILLED";
-      });
-    case WRITE_COMMENT_FAILURE:
-      if (state.cancelToken !== action.payload.token) {
-        return state; // 취소됨. 기존 상태 그대로 반환
-      }
-      return produce(state, (draft) => {
-        draft.apiStatus = "REJECTED";
-      });
-    default:
-      return state;
-  }
-};
-
-const initialState: State = {
-  apiStatus: "IDLE",
-  cancelToken: 0,
-  nickname: "",
-  image: "",
-  content: "",
-};
-
 type CommentWriteFormProps = BasicProps & {
   setRefetch: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -229,120 +111,43 @@ type CommentWriteFormProps = BasicProps & {
 const CommentWriteForm: FC<CommentWriteFormProps> = ({
   consumerID,
   sequenceID,
-  state: { auth, nickname: fNick, profile: fProf, userId },
+  state: { auth, nickname, profile, userId },
   setRefetch,
 }) => {
-  const [, setNickname] = useState(fNick);
-  const [image, setImage] = useState(fProf);
-
-  const input = useRef<HTMLDivElement>(null);
-  const fileInput = useRef<HTMLInputElement>(null);
-  const nicknameInput = useRef<HTMLDivElement>(null);
-  const [state, dispatch] = useReducerWithThunk(reducer, initialState);
-  // 파일 첨부는 action으로 관리하지 않을 것입니다.
-  const [attachedImage, setAttachedImage] = useState<File | null>(null);
-  const [fileUploadStatus, setFileUploadStatus] = useState<
-    "IDLE" | "PENDING" | "FULFILLED" | "REJECTED"
-  >("IDLE");
-  const [s3URL, setS3URL] = useState<string | null>(null);
-
-  // 파일 업로드
-  useEffect(() => {
-    if (!attachedImage) return;
-    async function up(imageFile: File) {
-      const formData = new FormData();
-      formData.append("file", imageFile);
-      const { data } = await axios.post<ApiResult<string>>("/file", formData);
-      if (data.status === "SUCCESS") {
-        return data.result;
-      } else {
-        throw new Error("Failure Uploading");
-      }
-    }
-    // 업로드 진행 처리
-    if (fileUploadStatus === "PENDING") {
-      // S3 Upload
-      up(attachedImage)
-        .then((data) => {
-          setFileUploadStatus("FULFILLED");
-          setS3URL(data);
-        })
-        .catch((e) => {
-          setFileUploadStatus("REJECTED");
-        });
-    }
-  }, [fileUploadStatus, attachedImage]);
-
-  // 닉네임 스테이트가 변할 때 주입
-  useEffect(() => {
-    if (nicknameInput.current) nicknameInput.current.textContent = fNick;
-  }, [fNick]);
-
-  // 프로필 스테이트가 변할 때 주입
-  useEffect(() => {
-    setImage(fProf);
-  }, [fProf]);
-
-  const handleFocus = () => {
-    input.current?.focus();
-  };
-  const handleRegister = () => {
-    const nickname = nicknameInput.current?.textContent;
-    const content = input.current?.textContent;
-    if (nickname && content) {
-      setNickname(nickname);
-      const actionCreat = postComment({
+  const { call, data, status } = useApi(postComment);
+  const handleRegiester = () => {
+    const { authMethod, authValue } = auth;
+    if (authMethod && authValue) {
+      const { authorization } = authValue;
+      call({
         consumerID,
         sequenceID,
-        state: { auth, nickname, profile: image, userId },
-        image: s3URL,
-        content,
+        authMethod,
+        authorization,
+        content: "-테스트-",
+        image: null,
       });
-      dispatch(actionCreat);
+    } else {
+      alert("AuthValue 누락됨.");
     }
   };
-  useEffect(() => {
-    if (state.apiStatus === "FULFILLED") {
-      // 리스트 갱신 시그널 보냄
-      setRefetch((r) => !r);
 
-      // 입력폼 초기화
-      if (input.current) input.current.textContent = "";
-      setFileUploadStatus("IDLE");
-      setAttachedImage(null);
-      setS3URL(null);
-    }
-  }, [state.apiStatus, setRefetch]);
-
-  // 에러 처리
-  useEffect(() => {
-    if (state.apiStatus === "REJECTED") {
-      alert("일시적인 오류로 댓글을 등록하지 못했습니다.");
-    }
-  }, [state.apiStatus]);
+  const fileInput = useRef<HTMLInputElement>(null);
   return (
     <>
       <Form>
         <ProfilePhotoBox>
-          <ProfilePhoto src={image}></ProfilePhoto>
+          <ProfilePhoto src={profile}></ProfilePhoto>
         </ProfilePhotoBox>
         <RowC>
           <RowC>
             <Row>
               <Nick>
-                <Input
-                  contentEditable={false}
-                  placeholder={"닉네임"}
-                  ref={nicknameInput}
-                />
+                <Input contentEditable={false} placeholder={"닉네임"} />
               </Nick>
             </Row>
-            <ContentDraft onClick={handleFocus}>
-              <ContentInput
-                contentEditable={state.apiStatus !== "PENDING"}
-                placeholder={"댓글 작성"}
-                ref={input}
-              />
+            <ContentDraft>
+              <ContentInput contentEditable={true} placeholder={"댓글 작성"} />
             </ContentDraft>
           </RowC>
           <Bottom>
@@ -350,13 +155,7 @@ const CommentWriteForm: FC<CommentWriteFormProps> = ({
               <button
                 className="btn-image"
                 style={{ background: "rgb(15,20,25)" }}
-                disabled={
-                  !auth.authMethod ||
-                  fileUploadStatus === "PENDING" ||
-                  state.apiStatus === "PENDING"
-                    ? true
-                    : false
-                }
+                disabled={false}
                 onClick={() => {
                   if (fileInput.current) {
                     fileInput.current.click();
@@ -370,44 +169,19 @@ const CommentWriteForm: FC<CommentWriteFormProps> = ({
                 type="file"
                 id="input-file"
                 accept="image/*"
-                disabled={!auth.authMethod || fileUploadStatus === "PENDING"}
+                disabled={false}
                 style={{ display: "none" }}
-                onChange={(e) => {
-                  const files = e.target.files;
-                  if (files && files.length > 0) {
-                    if (files[0].size < 1000000 * 25) {
-                      setFileUploadStatus("PENDING");
-                      setAttachedImage(files[0]);
-                    } else {
-                      alert("파일 첨부 가능 용량: 25MB 이하입니다.");
-                    }
-                  }
-                }}
+                onChange={(e) => {}}
               />
             </Attachment>
             <LoginList>
               <TwitterLogin />
               <KakaoLogin />
             </LoginList>
-            <CButton
-              onClick={handleRegister}
-              disabled={
-                !auth.authMethod ||
-                fileUploadStatus === "PENDING" ||
-                state.apiStatus === "PENDING"
-              }
-              label="등록"
-            />
+            <CButton disabled={false} label="등록" onClick={handleRegiester} />
           </Bottom>
           <Bottom>
-            <UploadStatus>
-              {fileUploadStatus === "PENDING" &&
-                `${attachedImage?.name} 업로드 중...`}
-              {fileUploadStatus === "FULFILLED" &&
-                `${attachedImage?.name} 업로드 완료!`}
-              {fileUploadStatus === "REJECTED" &&
-                `${attachedImage?.name} 업로드 실패`}
-            </UploadStatus>
+            <UploadStatus>파일 업로드 현황판.</UploadStatus>
           </Bottom>
         </RowC>
       </Form>
