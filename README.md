@@ -52,22 +52,7 @@ export function useReducerWithThunk<R extends Reducer<any, any>>(
 <script type="text/javascript" src="https://roco.moe/comments.js"></script>
 ```
 
-본인의 홈페이지에 위의 스크립트를 삽입하면 다음과 같은 댓글 창이 표시됩니다.
-![image](https://user-images.githubusercontent.com/13795765/112972886-b6e6e900-918b-11eb-887e-c365f925d6c4.png)
-
-네이버 아이디로 로그인 등 소셜 로그인을 진행합니다.
-
-![image](https://user-images.githubusercontent.com/13795765/112972919-bea68d80-918b-11eb-80db-4271f7dd9b1c.png)
-![image](https://user-images.githubusercontent.com/13795765/112972939-c36b4180-918b-11eb-830b-711a0b9a33e2.png)
-![image](https://user-images.githubusercontent.com/13795765/112972956-c82ff580-918b-11eb-8f05-1bd051795e85.png)
-
-위와 같이 로그인이 되었다면 댓글을 달 수 있습니다.
-
-![image](https://user-images.githubusercontent.com/13795765/112973017-d4b44e00-918b-11eb-9f65-905f19da3ff9.png)
-
-```html
-
-```
+본인의 홈페이지에 위의 스크립트를 삽입하면 그 위치에 댓글 창이 표시됩니다.
 
 # 의존 그래프
 
