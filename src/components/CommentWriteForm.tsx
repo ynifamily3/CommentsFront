@@ -6,6 +6,7 @@ import TwitterLogin from "./TwitterLogin";
 import KakaoLogin from "./KakaoLogin";
 import { postComment } from "../repo/comment";
 import { useApi } from "../hooks/useApi";
+import { ApiStatus } from "../entity/repo/ApiResponse";
 
 const Form = styled.div`
   position: relative;
@@ -111,9 +112,11 @@ type CommentWriteFormProps = BasicProps & {
 const CommentWriteForm: FC<CommentWriteFormProps> = ({
   consumerID,
   sequenceID,
-  state: { auth, nickname, profile, userId },
+  state: { auth, nickname, profile },
   setRefetch,
 }) => {
+  const fileInput = useRef<HTMLInputElement>(null);
+  const contentInput = useRef<HTMLDivElement>(null);
   const { call, data, status } = useApi(postComment);
   const handleRegiester = () => {
     const { authMethod, authValue } = auth;
@@ -124,7 +127,7 @@ const CommentWriteForm: FC<CommentWriteFormProps> = ({
         sequenceID,
         authMethod,
         authorization,
-        content: "-테스트-",
+        content: contentInput.current!.textContent!,
         image: null,
       });
     } else {
@@ -132,7 +135,13 @@ const CommentWriteForm: FC<CommentWriteFormProps> = ({
     }
   };
 
-  const fileInput = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (status === ApiStatus.SUCCESS && data?.result === true) {
+      setRefetch((r) => !r);
+      console.log(data);
+    }
+  }, [status, setRefetch, data]);
+
   return (
     <>
       <Form>
@@ -142,12 +151,16 @@ const CommentWriteForm: FC<CommentWriteFormProps> = ({
         <RowC>
           <RowC>
             <Row>
-              <Nick>
-                <Input contentEditable={false} placeholder={"닉네임"} />
+              <Nick style={{ color: nickname ? "inherit" : "gray" }}>
+                {nickname ? nickname : "닉네임"}
               </Nick>
             </Row>
             <ContentDraft>
-              <ContentInput contentEditable={true} placeholder={"댓글 작성"} />
+              <ContentInput
+                contentEditable={true}
+                placeholder={"댓글 작성"}
+                ref={contentInput}
+              />
             </ContentDraft>
           </RowC>
           <Bottom>
